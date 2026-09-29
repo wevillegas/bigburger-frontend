@@ -86,7 +86,7 @@ const handleOrderStatus= async (id,e)=>{
     <>
     <Typography.Title level={1}>Pedidos</Typography.Title>
 
-    <Table className='tabla'dataSource={orders} columns={columns} expandable={{
+    <Table className='tabla'dataSource={orders} columns={columns} scroll={{ x: 'max-content' }} expandable={{
 
       expandedRowRender: record => <div style={{ 
         margin: 0,

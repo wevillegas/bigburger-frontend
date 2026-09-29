@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from 'react'
 import axios from "axios"
 import { ProductsAdd } from "./ProductsAdd/ProductsAdd"
-import {  Checkbox, Form, Input, Modal, Select, Typography } from 'antd'
+import {  Button, Checkbox, Form, Input, Modal, Select, Typography } from 'antd'
 import { ProductList } from './ProductsList/ProductList'
-import { CheckCircleOutlined, CloseOutlined, ExclamationCircleOutlined, WarningOutlined } from '@ant-design/icons'
+import { CheckCircleOutlined, CloseOutlined, PlusOutlined, WarningOutlined } from '@ant-design/icons'
 import TextArea from 'antd/lib/input/TextArea'
 import "./Products.css"
 import { useAuth } from '../../auth/useAuth'
@@ -16,10 +16,11 @@ export const Products = () => {
     const auth= useAuth()
     const [products, productsState] = useState([])
     const [totalProducts, totalProductsUpdate] = useState(0)
+    const [addOpen, setAddOpen] = useState(false)
 
 
 
-    // AGREGAR PRODUCTO 
+    // AGREGAR PRODUCTO
     const addProduct = (nuevoProducto) => {
         const newProductArray = [...products, nuevoProducto]
         productsState(newProductArray)
@@ -33,6 +34,7 @@ export const Products = () => {
 
         })
 
+        setAddOpen(false)
         loadProductsNoModal()
 
     }
@@ -96,43 +98,10 @@ export const Products = () => {
 
 
     useEffect(() => {
-        loadProducts()
+        loadProductsNoModal()
     }, []);
 
-
-
-
     // CARGAR PRODUCTOS
-    const loadProducts = async () => {
-        try {
-            const response = await axios.get(`${URL}/products`);
-            const productsDB = response.data.products
-            const total = response.data.total
-            productsState(productsDB);
-            totalProductsUpdate(total);
-
-
-            Modal.info({
-                title: 'Productos obtenidos',
-                icon: <ExclamationCircleOutlined />,
-                content: `Se obtuvieron un total de ${total} productos`,
-                okText: 'Ok',
-
-            })
-
-
-        } catch (error) {
-            Modal.error({
-                title: 'ERROR',
-                icon: <CloseOutlined style={{ color: "#FF0000" }} />,
-                content: `Ocurrió un error al cargar los productos`,
-                okText: 'Ok',
-
-            })
-        }
-    }
-
-    // CARGAR PRODUCTOS SIN MODAL
     const loadProductsNoModal = async () => {
         try {
             const response = await axios.get(`${URL}/products`);
@@ -184,10 +153,25 @@ export const Products = () => {
         <>
             {/* INFORMACION PRINCIPAL */}
             <div>
-                <ProductsAdd addProduct={addProduct} totalProducts={totalProducts} />
+                <div className="productsToolbar">
+                    <Button type="primary" icon={<PlusOutlined />} onClick={() => setAddOpen(true)}>
+                        Añadir producto
+                    </Button>
+                </div>
                 <ProductList productsDBToList={products} deleteProduct={deleteModal} editModal={editProductModal} />
                 <h1>Total: {totalProducts}</h1>
             </div>
+
+            {/* MODAL DE ALTA */}
+            <Modal
+                title="Añadir producto"
+                visible={addOpen}
+                onCancel={() => setAddOpen(false)}
+                footer={null}
+                destroyOnClose
+            >
+                <ProductsAdd addProduct={addProduct} totalProducts={totalProducts} />
+            </Modal>
 
 
             {/* MODAL DE EDICION */}

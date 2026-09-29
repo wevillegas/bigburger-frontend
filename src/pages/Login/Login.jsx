@@ -1,6 +1,5 @@
 import { Button, Checkbox, Form, Input, Modal } from "antd";
 import React, { useState } from "react";
-import logo from '../../assets/img/logo-transparente.png'
 import { Header } from "../../shared/Header/Header";
 import  "./Login.scss"
 // import { URL } from "../../constants/endpoints";
@@ -50,13 +49,11 @@ export const Login = () => {
   }
  
   return (
-    <>
-    
-      <div className="logoContainer">
-        <img src={logo} alt="big burguer logo" />
-      </div>
+    <div className="loginPage">
+      <h1 className="wordmark">BIGBURGER</h1>
+      <p className="wordmarkSub">Planta de pedidos N.º 01</p>
       <div className="formContainer">
-      <Form 
+      <Form
         name="basic"
         labelCol={{
           span: 8,
@@ -195,6 +192,6 @@ export const Login = () => {
           </Form.Item>
         </Form>
       </Modal>
-    </>
+    </div>
   );
 };

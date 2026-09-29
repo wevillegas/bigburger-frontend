@@ -40,9 +40,7 @@ export const ProductsAdd = ({ addProduct }) => {
     return (
 
         <Row>
-            <Col xs={18} lg={12} offset={6}  className='addProduct' >
-            <h1>Añadir producto</h1>
-
+            <Col span={24}>
                 <Form
                     layout='vertical'
                     name="product"

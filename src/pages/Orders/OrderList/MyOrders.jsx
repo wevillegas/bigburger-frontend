@@ -64,7 +64,7 @@ export const MyOrders = () => {
   return (
     <>
     <Typography.Title level={1}>Mis Pedidos</Typography.Title>
-    <Table className='tabla'dataSource={orders} columns={columns} expandable={{
+    <Table className='tabla'dataSource={orders} columns={columns} scroll={{ x: 'max-content' }} expandable={{
       expandedRowRender: record => <div style={{ 
         margin: 0,
         padding:0 ,

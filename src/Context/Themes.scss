@@ -1,12 +1,23 @@
+/* Industrial Precisionist tokens — flat overlapping planes, one raking light,
+   hard offset shadows (never blurred), square-cut geometry. No gradients.
+   color1 slate (dark planes) / color2 rust (raking light) / color3 amber (primary action)
+   color4 warm oxide (hover/selected) / color5 chalk white (light surfaces) */
 :root{
-    --color1: #211d1d;
-    --color2: #7f3e1a;
-    --color3: #f08c2b;
-    --color4: #f4e038;
-    --color5: #f6f6f6;
-    --grey1:#545454 ;
-    --grey2:#737373 ;
-    --grey3:#a6a6a6 ;
-    --grey4:#d9d9d9 ;
-  
-  }
+    --color1: #2B2F33;
+    --color2: #B33F2C;
+    --color3: #E8A33D;
+    --color4: #D9663B;
+    --color5: #F4F1EA;
+    --grey1: #2B2F33;
+    --grey2: #52585E;
+    --grey3: #8B9096;
+    --grey4: #D8D3C8;
+
+    --font-display: 'Big Shoulders Stencil', 'IBM Plex Sans', sans-serif;
+    --font-body: 'IBM Plex Sans', -apple-system, sans-serif;
+
+    --shadow-hard: 6px 6px 0 var(--color1);
+    --shadow-hard-sm: 4px 4px 0 var(--color1);
+    --shadow-hard-press: 2px 2px 0 var(--color1);
+    --radius: 2px;
+}

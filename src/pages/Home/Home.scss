@@ -1,20 +1,39 @@
 @import '../../Context/Themes.scss';
 
-.logo{
-    height: 3rem;
-}
-.ant-layout-header {
-    padding: 0px !important;
-}
-.ant-menu.ant-menu-dark, .ant-layout-sider{
-  background-color:#211d1d!important;
-}
-.ant-menu-item-selected, .ant-menu-item:hover {
-  background-color: var(--color4) !important ;
-}
-.ant-switch-checked{
-  background-color: var(--color3) !important;
+.ant-layout {
+  background: transparent;
 }
 .fullHeight{
   min-height: 100vh;
+  background: transparent;
+}
+.site-layout-background{
+  background: transparent;
+}
+
+.desktopSider {
+  /* stays a normal flex item, stretching full column height so its dark
+     background reaches the footer; the menu list inside is what sticks */
+}
+
+.mobileDrawer {
+  .ant-drawer-body {
+    padding: 0;
+  }
+  .ant-drawer-header {
+    display: none;
+  }
+  .ant-drawer-content-wrapper {
+    top: 64px !important;
+    height: calc(100% - 64px) !important;
+  }
+}
+.ant-drawer-mask {
+  top: 64px !important;
+}
+
+@media screen and (max-width: 991px) {
+  .desktopSider {
+    display: none !important;
+  }
 }

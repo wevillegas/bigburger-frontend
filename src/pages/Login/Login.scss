@@ -1,35 +1,111 @@
 @import '../../Context/Themes.scss';
-.logoContainer{
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%,-50%);
-    justify-content: center;
-    align-items: center;
-    z-index: 500;
-}
-.formContainer{
-    // padding-top: 4rem;
-    // display: flex;
-    z-index: 1090;
+
+.loginPage {
+    position: relative;
     min-height: 100vh;
-    justify-content: center;
-    align-items: center;
-    align-content: center;
-    background-image: linear-gradient(
-    var(--color2) 20%, var(--color3) 40%, var(--color4) 60%, var(--color5) 100%);
+    width: 100%;
+    background-color: var(--color1);
+    overflow: hidden;
     display: flex;
-    .formBlock{
-        background-color: rgba($color: white, $alpha: 0.6);
-        padding: 2rem;
-        width:75% ;
-        justify-content: center;
-        border-radius: 0.4rem;
-        z-index: 900;
-        a{
-            color: black;
-            font-weight: bolder;
+    align-items: center;
+    justify-content: flex-end;
+    padding: 4vw 8vw;
+
+    // the raking light: one hard diagonal plane crossing the frame
+    &::before {
+        content: '';
+        position: absolute;
+        top: -10%;
+        left: -15%;
+        width: 75%;
+        height: 140%;
+        background-color: var(--color2);
+        transform: skewX(-12deg);
+        z-index: 0;
+    }
+    &::after {
+        content: '';
+        position: absolute;
+        bottom: 0;
+        left: -15%;
+        width: 45%;
+        height: 30%;
+        background-color: var(--color4);
+        transform: skewX(-12deg);
+        z-index: 0;
+    }
+}
+
+.wordmark {
+    position: absolute;
+    top: 8vh;
+    left: 6vw;
+    z-index: 1;
+    margin: 0;
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: clamp(2.5rem, 6vw, 5rem);
+    line-height: 0.95;
+    color: var(--color5);
+    text-shadow: 4px 4px 0 var(--color1);
+    letter-spacing: -0.02em;
+}
+
+.wordmarkSub {
+    position: absolute;
+    top: calc(8vh + clamp(2.5rem, 6vw, 5rem) + 0.5rem);
+    left: 6vw;
+    z-index: 1;
+    color: var(--color5);
+    font-family: var(--font-body);
+    font-weight: 500;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    font-size: 0.85rem;
+    opacity: 0.85;
+}
+
+.formContainer {
+    position: relative;
+    z-index: 2;
+    width: 100%;
+    max-width: 380px;
+
+    .formBlock {
+        background-color: var(--color5);
+        padding: 2.5rem;
+        box-shadow: var(--shadow-hard);
+        border: 2px solid var(--color1);
+
+        .ant-form-item-label > label {
+            font-family: var(--font-body);
+            font-weight: 600;
+            color: var(--grey1);
+        }
+
+        input, .ant-input, .ant-input-affix-wrapper {
+            border: 2px solid var(--color1);
+            border-radius: 0;
+            background-color: white;
+        }
+        .ant-input-affix-wrapper > input.ant-input {
+            border: none;
+        }
+
+        a {
+            color: var(--color2);
+            font-weight: 600;
+            text-decoration: underline;
         }
     }
+}
 
+@media screen and (max-width: 700px) {
+    .loginPage {
+        justify-content: center;
+        padding: 4vw;
+    }
+    .wordmark, .wordmarkSub {
+        left: 5vw;
+    }
 }

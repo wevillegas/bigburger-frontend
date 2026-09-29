@@ -56,9 +56,15 @@
             display: flex;
             justify-content: center;
             align-items: center;
+            margin: 0;
 
-            img {
-                width: 150px;
+            &.footerMark span {
+                font-family: var(--font-display);
+                font-weight: 700;
+                font-size: 1.5rem;
+                color: var(--color5);
+                border: 2px solid var(--color3);
+                padding: 0.4rem 0.8rem;
             }
         }
     }

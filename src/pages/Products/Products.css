@@ -2,17 +2,16 @@
     background-color: var(--color5);
 }
 
-.addProduct {
-    padding: 1.5rem;
-    box-shadow: 0px 15px 25px rgba(0, 0, 0, 0.5);
-    margin-bottom: 3rem;
-    border-radius: 1rem;
+.productsToolbar {
+    margin-bottom: 1.2rem;
 }
 
 .tabla {
-    box-shadow: 0px 15px 25px rgba(0, 0, 0, 0.4);
+    box-shadow: var(--shadow-hard);
+    border: 2px solid var(--color1);
     margin-bottom: 3rem;
-    border-radius: 1rem;
+    border-radius: 0;
+    background-color: white;
 }
 
 .inputEdit {
@@ -32,8 +31,8 @@
     line-height: 1.5715;
     background-color: #fff;
     background-image: none;
-    border: 1px solid #d9d9d9;
-    border-radius: 2px;
+    border: 2px solid var(--color1);
+    border-radius: 0;
     transition: all 0.3s;
 }
 
@@ -47,8 +46,3 @@
     height: 100px;
 }
 
-@media screen and (max-width: 991px) {
-    .addProduct{
-        margin: auto;
-    }
-}

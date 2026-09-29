@@ -1,6 +1,5 @@
 import React from 'react'
 import "./Footer.scss"
-import logo from "../../assets/img/logo-transparente.png";
 import { DeleteOutlined, EditOutlined, FacebookOutlined, GithubOutlined, InstagramOutlined, WhatsAppOutlined } from '@ant-design/icons'
 
 export const Footer = () => {
@@ -8,8 +7,8 @@ export const Footer = () => {
     <footer className='footer'>
       <div className="grupo-1">
         <div className="box">
-          <figure>
-            <img src={logo} alt="logo" />
+          <figure className="footerMark">
+            <span>BIGBURGER</span>
           </figure>
         </div>
         <div className="box">

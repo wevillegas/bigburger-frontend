@@ -1,28 +1,102 @@
+@import '../../Context/Themes.scss';
+
 .navbar{
     height: 4rem;
-
+    background-color: var(--color1);
     position:sticky;
     top: 0;
-    justify-content: center;
+    justify-content: space-between;
     align-items: center;
     z-index: 1050;
-    padding: 0;
-
+    padding: 0 1.5rem;
     display: flex;
-        div{
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        height: 100%;
-            
-        }
-    .nav-cart{
-        position: absolute;
-        right: 2rem;
-        transform: scale(1.5);
-        .ant-badge-count{
-            transform:scale(0.6) translate(50%,-50%)!important;
 
+    .menuToggle {
+        display: none;
+        align-items: center;
+        justify-content: center;
+        width: 2.4rem;
+        height: 2.4rem;
+        margin-right: 0.8rem;
+        background: transparent !important;
+        border: none !important;
+        box-shadow: none !important;
+        color: var(--color5) !important;
+        font-size: 1.3rem;
+        padding: 0 !important;
+    }
+    .menuToggle:hover {
+        transform: none !important;
+        color: var(--color3) !important;
+    }
+
+    .brandMark {
+        display: flex;
+        align-items: center;
+        gap: 0.6rem;
+        text-decoration: none;
+
+        .brandWord {
+            font-family: var(--font-display);
+            font-weight: 700;
+            letter-spacing: -0.01em;
+            color: var(--color5);
+            font-size: 1.1rem;
+        }
+    }
+
+    @media screen and (max-width: 810px) {
+        .menuToggle {
+            display: flex;
+        }
+    }
+
+    .nav-cart{
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        padding: 0.5rem 0.9rem;
+        border: 2px solid var(--color5);
+        border-radius: var(--radius);
+        color: var(--color5);
+        font-size: 1.2rem;
+        text-decoration: none;
+        transition: transform 120ms ease-out, box-shadow 120ms ease-out, background-color 120ms ease-out, color 120ms ease-out;
+
+        span {
+            font-family: var(--font-body);
+            font-weight: 600;
+            font-size: 0.95rem;
+            display: none;
+        }
+
+        .ant-badge-count{
+            box-shadow: none !important;
+            background: var(--color3) !important;
+            color: var(--color1) !important;
+            font-weight: 700;
+        }
+
+        &:hover {
+            transform: translate(-2px, -2px);
+            box-shadow: 4px 4px 0 var(--color2);
+        }
+
+        &.active {
+            background-color: var(--color3);
+            border-color: var(--color3);
+            color: var(--color1);
+
+            .ant-badge-count {
+                background: var(--color1) !important;
+                color: var(--color5) !important;
+            }
+        }
+    }
+
+    @media screen and (min-width: 560px) {
+        .nav-cart span {
+            display: inline;
         }
     }
 

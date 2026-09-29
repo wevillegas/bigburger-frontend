@@ -1,4 +1,4 @@
-import { Layout } from "antd";
+import { Drawer, Layout } from "antd";
 
 
 import React, { useEffect, useState } from "react";
@@ -22,6 +22,7 @@ const { Content, Sider } = Layout;
 export const Home = () => {
   const initialCart = JSON.parse(localStorage.getItem('inCart'))
   const [productsQty, setProductQty] = useState(0);
+  const [menuOpen, setMenuOpen] = useState(false);
   const bCount = (cart) => {
    
     const burgerCount = cart?.reduce(
@@ -36,14 +37,23 @@ export const Home = () => {
   return (
     <>
       <Layout style={{ minHeight: "100vh" }}>
-        <Header productsQty={productsQty}/>
+        <Header productsQty={productsQty} onMenuClick={() => setMenuOpen((o) => !o)} />
         <Layout className="fullHeight">
-          <Sider  breakpoint="lg" collapsedWidth="60px"   style={{
-       
-      }}>
+          <Sider className="desktopSider" breakpoint="lg" collapsedWidth="60px" style={{}}>
             <Sidebar productsQty={productsQty} />
           </Sider>
-          
+          <Drawer
+            placement="left"
+            closable={false}
+            onClose={() => setMenuOpen(false)}
+            visible={menuOpen}
+            className="mobileDrawer"
+            bodyStyle={{ padding: 0, backgroundColor: 'var(--color1)' }}
+            width={240}
+          >
+            <Sidebar productsQty={productsQty} onNavigate={() => setMenuOpen(false)} />
+          </Drawer>
+
             <Content
               className="site-layout-background" 
               breakpoint="lg" 

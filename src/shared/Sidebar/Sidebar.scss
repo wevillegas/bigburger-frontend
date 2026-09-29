@@ -1,21 +1,40 @@
 @import '../../Context/Themes.scss';
 
+.ant-menu.ant-menu-dark, .ant-layout-sider {
+    background-color: var(--color1) !important;
+}
+.ant-menu-item-selected, .ant-menu-item:hover {
+    background-color: var(--color4) !important;
+}
+.ant-switch-checked {
+    background-color: var(--color3) !important;
+}
+
 .sider{
-  
+    li.ant-menu-item{ margin-top: 0; border-radius: 0 !important; }
+}
+
+/* Mobile drawer: the menu fills the drawer body normally. */
+.mobileDrawer .sider {
+    height: 100%;
     overflow: auto;
+}
+
+/* Desktop: the gray/dark column (.desktopSider, the antd Sider) stretches
+   full page height on its own. The menu list must stay its OWN natural
+   height (not stretched to match that tall column) or sticky has no room
+   to move within — that was the bug. */
+.desktopSider .sider {
     position: sticky;
-    left: 0;
     top: 64px;
-    bottom: 0;
-    li.ant-menu-item{margin-top: 0;}
-  }
+    height: auto;
+    max-height: calc(100vh - 64px);
+    overflow-y: auto;
+}
 .themeSwitchContainer{
     display: flex;
     justify-content: center;
     margin: 0.3rem;
-    
-    
-
 }
 .welcome-container{
     display: flex;
@@ -28,16 +47,15 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    color: var(--color5);
+    color: var(--color1);
     text-align: center;
     background-color: var(--color3);
     width: 1.5rem;
     height: 1.5rem;
-
+    font-family: var(--font-display);
+    font-weight: 700;
     aspect-ratio: 1 !important;
-    border-radius: 50%;
-    
-    
+    border-radius: 0;
 }
 .d-none{
     display: none !important;
@@ -46,14 +64,14 @@
     position: relative;
 }
 
-
 .ant-badge {
     color: rgba(255, 255, 255, 0.65) !important;
     font-weight: 400 !important;
 }
 .ant-badge-count{
-    transform: translate(150%, -45%) !important
+    transform: translate(150%, -45%) !important;
+    background-color: var(--color2) !important;
 }
 .ant-layout-sider-trigger{
-    background-color: var(--color3) !important;
+    background-color: var(--color2) !important;
 }

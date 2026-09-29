@@ -75,7 +75,7 @@ export const ProductList = ({ productsDBToList, deleteProduct, editModal }) => {
        
 
 
-            <Table columns={columns} dataSource={productsDBToList} className={"tabla"}/>
+            <Table columns={columns} dataSource={productsDBToList} className={"tabla"} scroll={{ x: 'max-content' }}/>
         </>
     )
 }

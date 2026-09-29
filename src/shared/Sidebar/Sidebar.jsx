@@ -16,7 +16,7 @@ import { useAuth } from "../../auth/useAuth";
 import "./Sidebar.scss";
 import { Link, NavLink, Router, useLocation } from "react-router-dom";
 
-export const Sidebar = ({productsQty}) => {
+export const Sidebar = ({productsQty, onNavigate}) => {
 
   const auth = useAuth();
   const userLogout = () => {
@@ -25,13 +25,22 @@ export const Sidebar = ({productsQty}) => {
   const userRole = JSON.parse(localStorage.getItem("currentUser")).role;
   const adminRole = userRole == "ADMINISTRADOR" ? true : false;
 
-  
+  const location = useLocation();
+  const pathToKey = {
+    "/": "1",
+    "/cart": "2",
+    "/myorder": "7",
+    "/orders": "3",
+    "/users": "4",
+    "/products": "5",
+  };
+  const selectedKey = pathToKey[location.pathname] || "";
 
   return (
     <>
-    
 
-      <Menu theme="dark"  mode="inline" className="sider">
+
+      <Menu theme="dark" mode="inline" className="sider" selectedKeys={[selectedKey]} onClick={() => onNavigate?.()}>
         <Menu.Item key="1" icon={<HomeOutlined />}>
           <NavLink to="/">Inicio</NavLink>
         </Menu.Item>

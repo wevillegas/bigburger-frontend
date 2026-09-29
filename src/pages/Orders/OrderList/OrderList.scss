@@ -1,6 +1,8 @@
 .tabla {
-    box-shadow: 0px 15px 25px rgba(0, 0, 0, 0.4);
+    box-shadow: var(--shadow-hard);
+    border: 2px solid var(--color1);
     margin-bottom: 3rem;
-    border-radius: 1rem;
+    border-radius: 0;
     padding: 1rem;
+    background-color: white;
 }

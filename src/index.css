@@ -1,20 +1,65 @@
+@import url('https://fonts.googleapis.com/css2?family=Big+Shoulders+Stencil:wght@600;800&family=IBM+Plex+Sans:wght@400;500;600&display=swap');
 @import './Context/Themes.scss';
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  scrollbar-color: var(--color2) var(--color5);
+}
 
 body {
   margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
-    sans-serif;
+  font-family: var(--font-body);
+  color: var(--grey1);
+  background-color: #F4F1EA;
+  background-image:
+    linear-gradient(115deg, transparent 0%, transparent 40%, rgba(232,163,61,0.55) 55%, rgba(232,163,61,0.55) 63%, transparent 78%),
+    linear-gradient(115deg, transparent 0%, transparent 55%, rgba(179,63,44,0.6) 68%, rgba(179,63,44,0.6) 76%, transparent 92%),
+    linear-gradient(135deg, #F4F1EA 0%, #F0E4D2 40%, #ECD8BC 70%, #E9CBA5 100%);
+  background-attachment: fixed;
+  background-size: cover;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   min-height: 100vh;
 }
 
+/* Stencil face is reserved for the wordmark and large section markers
+   (see .wordmark, .brandWord); regular headings use a bold grotesk so
+   admin tables and forms stay legible at working sizes. */
+h1, h2, h3, h4, .ant-typography {
+  font-family: var(--font-body);
+  font-weight: 700;
+  letter-spacing: -0.01em;
+}
+
 code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
+  font-family: 'IBM Plex Mono', Menlo, Monaco, Consolas, 'Courier New',
     monospace;
 }
 
+::selection {
+  background-color: var(--color2);
+  color: var(--color5);
+}
+
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+::-webkit-scrollbar-track {
+  background: var(--color5);
+}
+::-webkit-scrollbar-thumb {
+  background: var(--color2);
+  border-radius: 0;
+}
+
+:focus-visible {
+  outline: 3px solid var(--color3);
+  outline-offset: 2px;
+}
 
 .p10 {
   padding: 3rem;
@@ -26,24 +71,46 @@ code {
 .noti-bubble{
   position: absolute;
   top:0.5rem;
-  right:50%; padding:1px 2px 1px 2px; 
-  background-color:red;
+  right:50%; padding:1px 2px 1px 2px;
+  background-color: var(--color2);
   height: 0.7rem;
-  width: 0.7rem; 
+  width: 0.7rem;
   border-radius: 50%;
   color:white;
 
 }
-button{
-  border: none;
-  background-color: var(--color3);
-  border-radius: 0.3rem;
+
+button:not(.ant-btn-dangerous), .ant-btn:not(.ant-btn-dangerous), .ant-btn-primary:not(.ant-btn-dangerous), .ant-btn-default:not(.ant-btn-dangerous) {
+  border: 2px solid var(--color1) !important;
+  background-color: var(--color3) !important;
+  border-radius: var(--radius) !important;
   cursor: pointer;
-  color: white;
-  /* box-shadow: 0 0.3rem 0.5rem ; */
+  color: var(--color1) !important;
+  font-family: var(--font-body);
+  font-weight: 600;
+  padding: 0.5rem 1rem;
+  box-shadow: var(--shadow-hard-sm);
+  transition: transform 120ms ease-out, box-shadow 120ms ease-out;
 }
 
-button:hover{transform: scale(1.1);}
+button:not(.ant-btn-dangerous):hover, .ant-btn:not(.ant-btn-dangerous):hover, .ant-btn-primary:not(.ant-btn-dangerous):hover, .ant-btn-default:not(.ant-btn-dangerous):hover {
+  transform: translate(-2px, -2px);
+  box-shadow: 6px 6px 0 var(--color1) !important;
+  color: var(--color1) !important;
+  border-color: var(--color1) !important;
+}
+
+button:not(.ant-btn-dangerous):active, .ant-btn:not(.ant-btn-dangerous):active, .ant-btn-primary:not(.ant-btn-dangerous):active, .ant-btn-default:not(.ant-btn-dangerous):active {
+  transform: translate(2px, 2px);
+  box-shadow: 0 0 0 var(--color1) !important;
+}
+
+button:disabled {
+  cursor: not-allowed;
+  opacity: 0.5;
+  box-shadow: none;
+  transform: none;
+}
 
 @media screen and (max-width: 810px) {
   main {
@@ -51,3 +118,12 @@ button:hover{transform: scale(1.1);}
   }
 }
 
+@media screen and (max-width: 576px) {
+  .ant-modal {
+    max-width: calc(100vw - 24px);
+    margin: 12px auto;
+  }
+  .ant-table {
+    font-size: 0.85rem;
+  }
+}
