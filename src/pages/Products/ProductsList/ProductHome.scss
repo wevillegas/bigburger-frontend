@@ -5,6 +5,19 @@
     margin: 0 auto;
 }
 
+.menu-info-banner {
+    font-family: var(--font-body);
+    font-weight: 600;
+    color: var(--color1);
+    background-color: var(--color5);
+    border: 2px solid var(--color1);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow-hard-sm);
+    padding: 0.6rem 1rem;
+    margin: 0 0 1.2rem;
+    width: fit-content;
+}
+
 .category-filters {
     display: flex;
     flex-wrap: wrap;
@@ -152,6 +165,11 @@
             }
         }
     }
+}
+
+.card-placeholder {
+    visibility: hidden;
+    pointer-events: none;
 }
 
 @media screen and (max-width: 480px) {

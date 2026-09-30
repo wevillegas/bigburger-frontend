@@ -1,14 +1,14 @@
 @import '../../Context/Themes.scss';
 
 .ant-layout {
-  background: transparent;
+  background: transparent !important;
 }
 .fullHeight{
   min-height: 100vh;
-  background: transparent;
+  background: transparent !important;
 }
 .site-layout-background{
-  background: transparent;
+  background: transparent !important;
 }
 
 .desktopSider {

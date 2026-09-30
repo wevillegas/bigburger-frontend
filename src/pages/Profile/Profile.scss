@@ -1,0 +1,79 @@
+@import '../../Context/Themes.scss';
+
+.profile-page {
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+.profile-layout {
+    display: grid;
+    grid-template-columns: 1fr 260px;
+    gap: 1.5rem;
+    align-items: start;
+}
+
+.profile-form {
+    background-color: var(--color5);
+    border: 2px solid var(--color1);
+    box-shadow: var(--shadow-hard-sm);
+    padding: 1.2rem;
+
+    input:disabled {
+        background-color: var(--grey4);
+        cursor: not-allowed;
+    }
+}
+
+.profile-summary {
+    background-color: var(--color5);
+    border: 2px solid var(--color1);
+    box-shadow: var(--shadow-hard-sm);
+    padding: 1.2rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.profile-role-badge {
+    align-self: flex-start;
+    font-family: var(--font-body);
+    font-weight: 700;
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    padding: 0.3rem 0.7rem;
+    background-color: var(--color1);
+    color: var(--color5);
+    border-radius: var(--radius);
+}
+
+.profile-points {
+    &-label {
+        display: block;
+        font-family: var(--font-body);
+        font-weight: 600;
+        color: var(--grey2);
+        font-size: 0.85rem;
+    }
+
+    &-value {
+        display: block;
+        font-family: var(--font-display);
+        font-size: 2.2rem;
+        color: var(--color2);
+        line-height: 1.2;
+    }
+
+    p {
+        font-family: var(--font-body);
+        font-size: 0.8rem;
+        color: var(--grey2);
+        margin-top: 0.6rem;
+    }
+}
+
+@media screen and (max-width: 767px) {
+    .profile-layout {
+        grid-template-columns: 1fr;
+    }
+}

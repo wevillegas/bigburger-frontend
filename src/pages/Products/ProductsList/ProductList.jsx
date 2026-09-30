@@ -1,11 +1,14 @@
 import React from 'react'
 import { DeleteOutlined, EditOutlined } from '@ant-design/icons'
 
-export const ProductList = ({ productsDBToList, deleteProduct, editModal }) => {
+export const ProductList = ({ productsDBToList, deleteProduct, editModal, pageSize }) => {
 
     if (productsDBToList.length === 0) {
         return <p className="admin-empty">No hay productos en esta categoría.</p>
     }
+
+    // rellena los lugares vacíos de la última página para que la grilla siempre ocupe el mismo alto
+    const emptySlots = Array.from({ length: Math.max(0, (pageSize || 0) - productsDBToList.length) })
 
     return (
         <ul className="admin-product-grid">
@@ -39,6 +42,22 @@ export const ProductList = ({ productsDBToList, deleteProduct, editModal }) => {
                                 >
                                     <DeleteOutlined />
                                 </button>
+                            </div>
+                        </div>
+                    </div>
+                </li>
+            ))}
+            {emptySlots.map((_, i) => (
+                <li className="admin-product-card admin-product-card--placeholder" key={`empty-${i}`} aria-hidden="true">
+                    <div className="admin-product-img-wrap" />
+                    <div className="admin-product-info">
+                        <h3>&nbsp;</h3>
+                        <p className="admin-product-description">&nbsp;</p>
+                        <div className="admin-product-footer">
+                            <b className="admin-product-price">&nbsp;</b>
+                            <div className="admin-product-actions">
+                                <button type="button" tabIndex={-1}><EditOutlined /></button>
+                                <button type="button" tabIndex={-1}><DeleteOutlined /></button>
                             </div>
                         </div>
                     </div>

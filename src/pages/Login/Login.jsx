@@ -1,5 +1,6 @@
 import { Button, Checkbox, Form, Input, Modal } from "antd";
 import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { Header } from "../../shared/Header/Header";
 import  "./Login.scss"
 // import { URL } from "../../constants/endpoints";
@@ -10,8 +11,9 @@ import { CheckCircleOutlined } from "@ant-design/icons";
 const URL = process.env.REACT_APP_API_URL;
 
 export const Login = () => {
-  
+
   const auth = useAuth();
+  const navigate = useNavigate();
   const onLogin = async (loginData)=>{
     auth.login(loginData)
 
@@ -119,6 +121,9 @@ export const Login = () => {
           </Button>
         </Form.Item>
       </Form>
+      <Button className="guestBtn" block onClick={() => navigate("/")}>
+        Entrar como invitado
+      </Button>
       </div>
       
           {/*===== Modal de Registro ======*/}

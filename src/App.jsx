@@ -4,7 +4,6 @@ import { Route, Routes } from "react-router-dom"
 import { AuthProvider } from "./auth/AuthProvider";
 import { Home } from "./pages/Home/Home"
 import { Login } from "./pages/Login/Login"
-import { PrivateRoute } from "./routers/PrivateRoute";
 
 
 export const App = () =>{
@@ -16,7 +15,9 @@ export const App = () =>{
     <AuthProvider>
         <Routes>
           <Route exact path="/login" element={<Login/>}/>
-          <Route path="/*" element={<PrivateRoute><Home /></PrivateRoute>}/>               
+          {/* Home decide caso por caso qué rutas son públicas (Menú/Carrito),
+              de cliente logueado, o de admin — ya no todo exige sesión */}
+          <Route path="/*" element={<Home />}/>
         </Routes>
       </AuthProvider>
 

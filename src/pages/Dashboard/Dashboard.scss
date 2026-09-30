@@ -1,0 +1,135 @@
+@import '../../Context/Themes.scss';
+
+.dashboard-page {
+    max-width: 1000px;
+    margin: 0 auto;
+}
+
+.dashboard-empty {
+    color: var(--grey2);
+    font-family: var(--font-body);
+}
+
+.dashboard-tiles {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+
+    @media screen and (max-width: 767px) {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+.dashboard-tile {
+    background-color: var(--color5);
+    border: 2px solid var(--color1);
+    box-shadow: var(--shadow-hard-sm);
+    padding: 1rem 1.1rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+}
+
+.dashboard-tile-label {
+    font-family: var(--font-body);
+    font-weight: 600;
+    font-size: 0.78rem;
+    color: var(--grey2);
+}
+
+.dashboard-tile-value {
+    font-family: var(--font-display);
+    font-size: 1.8rem;
+    color: var(--color2);
+}
+
+.dashboard-layout {
+    display: grid;
+    grid-template-columns: 1fr 260px;
+    gap: 1.5rem;
+    align-items: start;
+
+    @media screen and (max-width: 767px) {
+        grid-template-columns: 1fr;
+    }
+}
+
+.dashboard-panel {
+    background-color: var(--color5);
+    border: 2px solid var(--color1);
+    box-shadow: var(--shadow-hard-sm);
+    padding: 1.2rem;
+
+    h2 {
+        font-family: var(--font-display);
+        color: var(--color1);
+        margin: 0 0 1rem;
+        font-size: 1.1rem;
+    }
+}
+
+.dashboard-bars {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.8rem;
+
+    li {
+        display: grid;
+        grid-template-columns: 110px 1fr 30px;
+        align-items: center;
+        gap: 0.6rem;
+    }
+}
+
+.dashboard-bar-label {
+    font-family: var(--font-body);
+    font-weight: 600;
+    font-size: 0.8rem;
+    color: var(--color1);
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.dashboard-bar-track {
+    height: 14px;
+    background-color: var(--grey4);
+    border: 2px solid var(--color1);
+}
+
+.dashboard-bar-fill {
+    height: 100%;
+    background-color: var(--color3);
+}
+
+.dashboard-bar-count {
+    font-family: var(--font-body);
+    font-weight: 700;
+    font-size: 0.8rem;
+    color: var(--color1);
+    text-align: right;
+}
+
+.dashboard-channel-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    padding: 0.6rem 0;
+    border-bottom: 1px solid var(--grey4);
+    font-family: var(--font-body);
+    color: var(--color1);
+
+    b {
+        font-family: var(--font-display);
+        font-size: 1.2rem;
+        color: var(--color2);
+    }
+
+    &:last-child {
+        border-bottom: none;
+    }
+}

@@ -6,6 +6,7 @@ import { EditUser } from './EditUser/EditUser'
 import { ListaUsuarios } from './UserList/UserList'
 // import { URL } from '../../constants/endpoints'
 import { useAuth } from '../../auth/useAuth'
+import { Pagination } from '../../shared/Pagination/Pagination'
 const URL = process.env.REACT_APP_API_URL;
 
 const ROLE_FILTERS = [
@@ -13,6 +14,7 @@ const ROLE_FILTERS = [
     { key: 'ADMINISTRADOR', label: 'Administradores' },
     { key: 'USUARIO', label: 'Usuarios' },
 ];
+const PAGE_SIZE = 8
 
 export const User = () => {
     const auth= useAuth()
@@ -22,6 +24,7 @@ export const User = () => {
     const [dialogTitle, setDialogTitle] = useState('');
     const [roleFilter, setRoleFilter] = useState('todos');
     const [search, setSearch] = useState('');
+    const [page, setPage] = useState(1);
 
 
     async function loadUsers() {
@@ -127,6 +130,20 @@ export const User = () => {
         return matchesRole && matchesSearch;
     });
 
+    const totalPages = Math.max(1, Math.ceil(filteredUsers.length / PAGE_SIZE));
+    const currentPage = Math.min(page, totalPages);
+    const pageUsers = filteredUsers.slice((currentPage - 1) * PAGE_SIZE, currentPage * PAGE_SIZE);
+
+    const changeRoleFilter = (key) => {
+        setRoleFilter(key);
+        setPage(1);
+    };
+
+    const changeSearch = (value) => {
+        setSearch(value);
+        setPage(1);
+    };
+
     return (
         <>
             <Typography.Title level={1} className="stencil-title">Usuarios</Typography.Title>
@@ -138,7 +155,7 @@ export const User = () => {
                             key={f.key}
                             type="button"
                             className={`filter-chip${roleFilter === f.key ? ' active' : ''}`}
-                            onClick={() => setRoleFilter(f.key)}
+                            onClick={() => changeRoleFilter(f.key)}
                         >
                             {f.label}
                         </button>
@@ -149,12 +166,13 @@ export const User = () => {
                     className="user-search"
                     placeholder="Buscar por nombre..."
                     value={search}
-                    onChange={(e) => setSearch(e.target.value)}
+                    onChange={(e) => changeSearch(e.target.value)}
                     aria-label="Buscar usuario por nombre"
                 />
             </div>
 
-            <ListaUsuarios handleActiveStatus={handleActiveStatus} functionDelete={handleDeleteUser} users={filteredUsers} functionEditUser={handleEditUser} />
+            <ListaUsuarios handleActiveStatus={handleActiveStatus} functionDelete={handleDeleteUser} users={pageUsers} functionEditUser={handleEditUser} pageSize={PAGE_SIZE} />
+            <Pagination currentPage={currentPage} totalPages={totalPages} onPageChange={setPage} />
             <Modal title={dialogTitle} visible={actionDialog} onOk={hiddeModal} onCancel={hiddeModal}>
                 {dialogMessage}
             </Modal>

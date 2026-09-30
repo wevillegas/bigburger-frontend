@@ -4,11 +4,14 @@ import './userList.scss'
 
 const ROLE_LABEL = { ADMINISTRADOR: 'Administrador', USUARIO: 'Usuario' };
 
-export const ListaUsuarios = ({ functionDelete, handleActiveStatus, users, functionEditUser }) => {
+export const ListaUsuarios = ({ functionDelete, handleActiveStatus, users, functionEditUser, pageSize }) => {
 
     if (users.length === 0) {
         return <p className="admin-empty">No hay usuarios que coincidan con la búsqueda.</p>
     }
+
+    // rellena los lugares vacíos de la última página para que la lista siempre ocupe el mismo alto
+    const emptySlots = Array.from({ length: Math.max(0, (pageSize || 0) - users.length) })
 
     return (
         <ul className="user-list">
@@ -50,6 +53,24 @@ export const ListaUsuarios = ({ functionDelete, handleActiveStatus, users, funct
                         >
                             <DeleteOutlined />
                         </button>
+                    </div>
+                </li>
+            ))}
+            {emptySlots.map((_, i) => (
+                <li className="user-card user-card-placeholder" key={`empty-${i}`} aria-hidden="true">
+                    <div className="user-card-avatar">&nbsp;</div>
+                    <div className="user-card-info">
+                        <span className="user-card-name">&nbsp;</span>
+                        <span className="user-card-email">&nbsp;</span>
+                    </div>
+                    <span className="user-role-badge">&nbsp;</span>
+                    <label className="user-active-toggle">
+                        <input type="checkbox" disabled tabIndex={-1} />
+                        &nbsp;
+                    </label>
+                    <div className="user-card-actions">
+                        <button type="button" tabIndex={-1}><EditOutlined /></button>
+                        <button type="button" tabIndex={-1}><DeleteOutlined /></button>
                     </div>
                 </li>
             ))}

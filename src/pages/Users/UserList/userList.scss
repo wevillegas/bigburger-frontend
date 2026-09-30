@@ -97,6 +97,11 @@
     }
 }
 
+.user-card-placeholder {
+    visibility: hidden;
+    pointer-events: none;
+}
+
 .user-card {
     display: grid;
     grid-template-columns: 44px 1fr auto auto auto;

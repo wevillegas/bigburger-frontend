@@ -5,6 +5,8 @@ import React, { useEffect } from "react";
 import { NavLink } from "react-router-dom";
 import "./Header.scss";
 export const Header = ({productsQty, onMenuClick}) => {
+   const currentUser = JSON.parse(localStorage.getItem("currentUser") || "null");
+   const isAdmin = currentUser?.role === "ADMINISTRADOR";
    return (
     <>
       <div className="navbar">
@@ -23,11 +25,13 @@ export const Header = ({productsQty, onMenuClick}) => {
           </svg>
           <span className="brandWord">BIGBURGER</span>
         </NavLink>
-        <NavLink className="nav-cart" to="/cart">
-          <ShoppingCartOutlined />
-          <span>Carrito</span>
-          <Badge count={productsQty} className='badge' showZero />
-        </NavLink>
+        {!isAdmin && (
+          <NavLink className="nav-cart" to="/cart">
+            <ShoppingCartOutlined />
+            <span>Carrito</span>
+            <Badge count={productsQty} className='badge' showZero />
+          </NavLink>
+        )}
       </div>
 
     </>

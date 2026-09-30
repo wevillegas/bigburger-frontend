@@ -3,17 +3,20 @@ import { Card, Col, InputNumber, Modal, notification, Row } from 'antd'
 import axios from 'axios'
 import React, { useEffect, useState } from 'react'
 import { PRODUCT_CATEGORIES } from '../../../constants/categories'
+import { Pagination } from '../../../shared/Pagination/Pagination'
 import './ProductHome.scss'
 // import { URL } from '../../../constants/endpoints'
 
 const URL = process.env.REACT_APP_API_URL;
 
 const CATEGORIES = ["Todas", ...PRODUCT_CATEGORIES]
+const PAGE_SIZE = 8
 
 export const ProductHome = ({ bCount }) => {
 
     const [products, productsState] = useState([])
     const [activeCategory, setActiveCategory] = useState("Todas")
+    const [page, setPage] = useState(1)
     useEffect(() => {
         loadProducts()
     }, []);
@@ -68,26 +71,39 @@ export const ProductHome = ({ bCount }) => {
 
     }
 
+    const inStockProducts = products.filter(el => el.stock)
     const filteredProducts = activeCategory === "Todas"
-        ? products
-        : products.filter(el => el.categorie_id === activeCategory)
+        ? [...inStockProducts].sort((a, b) => PRODUCT_CATEGORIES.indexOf(a.categorie_id) - PRODUCT_CATEGORIES.indexOf(b.categorie_id))
+        : inStockProducts.filter(el => el.categorie_id === activeCategory)
+
+    const totalPages = Math.max(1, Math.ceil(filteredProducts.length / PAGE_SIZE))
+    const currentPage = Math.min(page, totalPages)
+    const pageProducts = filteredProducts.slice((currentPage - 1) * PAGE_SIZE, currentPage * PAGE_SIZE)
+    // rellena los lugares vacíos de la última página para que la grilla siempre ocupe el mismo alto
+    const emptySlots = Array.from({ length: PAGE_SIZE - pageProducts.length })
+
+    const changeCategory = (cat) => {
+        setActiveCategory(cat)
+        setPage(1)
+    }
 
     return (
         <>
             <div className="site-card-wrapper">
+                <p className="menu-info-banner">Todas las hamburguesas vienen con papas</p>
                 <div className="category-filters">
                     {CATEGORIES.map(cat => (
                         <button
                             key={cat}
                             className={`filter-chip${activeCategory === cat ? ' active' : ''}`}
-                            onClick={() => setActiveCategory(cat)}
+                            onClick={() => changeCategory(cat)}
                         >
                             {cat}
                         </button>
                     ))}
                 </div>
                 <Row gutter={[16, 16]}>
-                    {filteredProducts.map(el => (
+                    {pageProducts.map(el => (
                         <Col key={el._id} xs={24} sm={12} lg={8} xl={6}>
                             <Card className='card-container' bordered={false}>
                                 <div className="card-img-wrap">
@@ -106,7 +122,23 @@ export const ProductHome = ({ bCount }) => {
                         </Col>
                     ))
                     }
+                    {emptySlots.map((_, i) => (
+                        <Col key={`empty-${i}`} xs={24} sm={12} lg={8} xl={6}>
+                            <Card className="card-container card-placeholder" bordered={false} aria-hidden="true">
+                                <div className="card-img-wrap" />
+                                <div className="card-info">
+                                    <h3>&nbsp;</h3>
+                                    <p className="card-description">&nbsp;</p>
+                                    <div className="card-footer">
+                                        <b className="card-price">&nbsp;</b>
+                                        <button className="add-btn" tabIndex={-1}>&nbsp;</button>
+                                    </div>
+                                </div>
+                            </Card>
+                        </Col>
+                    ))}
                 </Row>
+                <Pagination currentPage={currentPage} totalPages={totalPages} onPageChange={setPage} />
             </div>
         </>
     )

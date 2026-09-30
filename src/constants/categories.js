@@ -3,7 +3,7 @@ export const PRODUCT_CATEGORIES = [
     'Dobles',
     'Triples',
     'Vegetarianas',
-    'Panchos',
     'Papas Fritas',
+    'Panchos',
     'Nuggets',
 ];

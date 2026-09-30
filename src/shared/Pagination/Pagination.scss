@@ -1,0 +1,59 @@
+@import '../../Context/Themes.scss';
+
+.app-pagination {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.5rem;
+    margin-top: 1.8rem;
+}
+
+.pagination-chip {
+    font-family: var(--font-body);
+    font-weight: 600;
+    font-size: 0.85rem;
+    min-width: 2.4rem;
+    height: 2.4rem;
+    padding: 0 0.6rem !important;
+    background-color: var(--color5) !important;
+    color: var(--color1) !important;
+    border: 2px solid var(--color1) !important;
+    border-radius: var(--radius) !important;
+    cursor: pointer;
+    box-shadow: var(--shadow-hard-press) !important;
+    transition: transform 0.12s ease, box-shadow 0.12s ease, background-color 0.12s ease;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    &:hover:not(:disabled) {
+        transform: translate(-1px, -1px);
+        box-shadow: var(--shadow-hard-sm) !important;
+    }
+
+    &.active {
+        background-color: var(--color1) !important;
+        color: var(--color5) !important;
+        border-color: var(--color1) !important;
+        cursor: default;
+        transform: none !important;
+    }
+
+    &:disabled {
+        opacity: 0.4;
+        cursor: not-allowed;
+        box-shadow: none !important;
+        transform: none !important;
+    }
+}
+
+.pagination-arrow {
+    font-size: 0.75rem;
+}
+
+.pagination-ellipsis {
+    font-family: var(--font-body);
+    font-weight: 600;
+    color: var(--grey2);
+    padding: 0 0.2rem;
+}

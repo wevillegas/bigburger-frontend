@@ -8,11 +8,13 @@ import TextArea from 'antd/lib/input/TextArea'
 import "./Products.scss"
 import { useAuth } from '../../auth/useAuth'
 import { PRODUCT_CATEGORIES } from '../../constants/categories'
+import { Pagination } from '../../shared/Pagination/Pagination'
 // const URL = 'http://localhost:3100/api'
 const { Option } = Select;
 
 const URL = process.env.REACT_APP_API_URL;
-const CATEGORY_FILTERS = ["Todas", ...PRODUCT_CATEGORIES]
+const CATEGORY_FILTERS = ["Todas", ...PRODUCT_CATEGORIES, "Sin stock"]
+const PAGE_SIZE = 8
 
 export const Products = () => {
     const auth= useAuth()
@@ -20,6 +22,7 @@ export const Products = () => {
     const [totalProducts, totalProductsUpdate] = useState(0)
     const [addOpen, setAddOpen] = useState(false)
     const [categoryFilter, setCategoryFilter] = useState('Todas')
+    const [page, setPage] = useState(1)
 
 
 
@@ -153,8 +156,19 @@ export const Products = () => {
 
 
     const filteredProducts = categoryFilter === 'Todas'
-        ? products
-        : products.filter(p => p.categorie_id === categoryFilter)
+        ? [...products].sort((a, b) => PRODUCT_CATEGORIES.indexOf(a.categorie_id) - PRODUCT_CATEGORIES.indexOf(b.categorie_id))
+        : categoryFilter === 'Sin stock'
+            ? products.filter(p => !p.stock)
+            : products.filter(p => p.categorie_id === categoryFilter)
+
+    const totalPages = Math.max(1, Math.ceil(filteredProducts.length / PAGE_SIZE))
+    const currentPage = Math.min(page, totalPages)
+    const pageProducts = filteredProducts.slice((currentPage - 1) * PAGE_SIZE, currentPage * PAGE_SIZE)
+
+    const changeCategoryFilter = (cat) => {
+        setCategoryFilter(cat)
+        setPage(1)
+    }
 
     return (
         <>
@@ -174,14 +188,15 @@ export const Products = () => {
                             key={cat}
                             type="button"
                             className={`filter-chip${categoryFilter === cat ? ' active' : ''}`}
-                            onClick={() => setCategoryFilter(cat)}
+                            onClick={() => changeCategoryFilter(cat)}
                         >
                             {cat}
                         </button>
                     ))}
                 </div>
 
-                <ProductList productsDBToList={filteredProducts} deleteProduct={deleteModal} editModal={editProductModal} />
+                <ProductList productsDBToList={pageProducts} deleteProduct={deleteModal} editModal={editProductModal} pageSize={PAGE_SIZE} />
+                <Pagination currentPage={currentPage} totalPages={totalPages} onPageChange={setPage} />
                 <p className="products-total">Total: {totalProducts}</p>
             </div>
 
@@ -206,16 +221,6 @@ export const Products = () => {
                     resetEdit()
                 }}
                 onOk={() => {
-                    productsState((pre) => {
-
-                        pre.map((product) => {
-
-                            if (product._id === productEditing._id) {
-                                return productEditing
-                            }
-                        })
-                    })
-
                     // PETICION PUT PARA EDITAR
                     const uploadChanges = async () => {
                         try {
