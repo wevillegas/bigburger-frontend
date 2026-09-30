@@ -8,12 +8,20 @@ import { ListaUsuarios } from './UserList/UserList'
 import { useAuth } from '../../auth/useAuth'
 const URL = process.env.REACT_APP_API_URL;
 
+const ROLE_FILTERS = [
+    { key: 'todos', label: 'Todos' },
+    { key: 'ADMINISTRADOR', label: 'Administradores' },
+    { key: 'USUARIO', label: 'Usuarios' },
+];
+
 export const User = () => {
     const auth= useAuth()
     const [users, setUsers] = useState([]);
     const [actionDialog, toggleActionDialog] = useState(false);
     const [dialogMessage, setDialogMessage] = useState('');
     const [dialogTitle, setDialogTitle] = useState('');
+    const [roleFilter, setRoleFilter] = useState('todos');
+    const [search, setSearch] = useState('');
 
 
     async function loadUsers() {
@@ -113,12 +121,40 @@ export const User = () => {
 
     const hiddeModal = () => toggleActionDialog(false)
 
+    const filteredUsers = users.filter(u => {
+        const matchesRole = roleFilter === 'todos' || u.role === roleFilter;
+        const matchesSearch = u.fullName.toLowerCase().includes(search.trim().toLowerCase());
+        return matchesRole && matchesSearch;
+    });
+
     return (
         <>
-            <Typography.Title level={1}>Usuarios</Typography.Title>
-            {/* <UserList/> */}
+            <Typography.Title level={1} className="stencil-title">Usuarios</Typography.Title>
 
-            <ListaUsuarios handleActiveStatus={handleActiveStatus} functionDelete={handleDeleteUser} users={users} functionEditUser={handleEditUser} />
+            <div className="users-toolbar">
+                <div className="role-filters">
+                    {ROLE_FILTERS.map(f => (
+                        <button
+                            key={f.key}
+                            type="button"
+                            className={`filter-chip${roleFilter === f.key ? ' active' : ''}`}
+                            onClick={() => setRoleFilter(f.key)}
+                        >
+                            {f.label}
+                        </button>
+                    ))}
+                </div>
+                <input
+                    type="text"
+                    className="user-search"
+                    placeholder="Buscar por nombre..."
+                    value={search}
+                    onChange={(e) => setSearch(e.target.value)}
+                    aria-label="Buscar usuario por nombre"
+                />
+            </div>
+
+            <ListaUsuarios handleActiveStatus={handleActiveStatus} functionDelete={handleDeleteUser} users={filteredUsers} functionEditUser={handleEditUser} />
             <Modal title={dialogTitle} visible={actionDialog} onOk={hiddeModal} onCancel={hiddeModal}>
                 {dialogMessage}
             </Modal>

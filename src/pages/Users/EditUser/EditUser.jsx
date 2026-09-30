@@ -1,30 +1,34 @@
-import { StarOutlined } from '@ant-design/icons';
-import { Form, Input, Select } from 'antd'
-import axios from 'axios';
-import React, { useState } from 'react'
+import { Select } from 'antd'
+import React from 'react'
 import './EditUser.scss'
 
-
 const { Option } = Select;
+const ROLE_LABEL = { ADMINISTRADOR: 'Administrador', USUARIO: 'Usuario' };
 
 export const EditUser = ({ userToEdit, updateRole }) => {
 
-    function handleChange(event){
+    function handleChange(event) {
         const user = userToEdit;
-        user.role =event;
+        user.role = event;
         updateRole(user)
     }
-    return (
-        <>
-        <Form className='modalForm'>
 
-        {userToEdit.role === 'ADMINISTRADOR' ? <b>ROL: <i>ADMINISTRADOR</i></b> : <b>ROL: <i>USUARIO</i></b>} <br />
-            <Select  style={{ width: 120 }} onChange={handleChange} className='Select' value="modificar rol">
+    return (
+        <div className="editUserForm">
+            <p className="editUserName">{userToEdit.fullName}</p>
+
+            <div className="editUserCurrentRole">
+                <span>Rol actual</span>
+                <span className={`user-role-badge user-role-badge--${userToEdit.role}`}>
+                    {ROLE_LABEL[userToEdit.role] || userToEdit.role}
+                </span>
+            </div>
+
+            <label className="editUserLabel" htmlFor="roleSelect">Nuevo rol</label>
+            <Select id="roleSelect" style={{ width: '100%' }} onChange={handleChange} value={userToEdit.role}>
                 <Option value="USUARIO">Usuario</Option>
                 <Option value="ADMINISTRADOR">Administrador</Option>
             </Select>
-        </Form>
-        </>
-        
+        </div>
     )
 }

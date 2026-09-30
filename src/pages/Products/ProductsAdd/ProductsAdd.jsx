@@ -4,6 +4,7 @@ import axios from 'axios';
 import TextArea from 'antd/lib/input/TextArea';
 import { CloseOutlined } from '@ant-design/icons';
 import { useAuth } from '../../../auth/useAuth'
+import { PRODUCT_CATEGORIES } from '../../../constants/categories'
 // import { URL } from '../../../constants/endpoints'
 const { Option } = Select;
 
@@ -84,10 +85,9 @@ export const ProductsAdd = ({ addProduct }) => {
                             {/* CATEGORIA */}
                             <Form.Item label="Categoría" name={"categorie_id"} rules={[{ required: true, message: "Ingrese la categoría" }]}>
                                 <Select>
-                                    <Option value="Simples">Simples</Option>
-                                    <Option value="Dobles">Dobles</Option>
-                                    <Option value="Triples">Triples</Option>
-                                    <Option value="Vegetarianas">Vegetarianas</Option>
+                                    {PRODUCT_CATEGORIES.map(cat => (
+                                        <Option key={cat} value={cat}>{cat}</Option>
+                                    ))}
                                 </Select>
                             </Form.Item>
                         </Col>

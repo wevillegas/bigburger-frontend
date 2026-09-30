@@ -8,6 +8,7 @@ import { AdminRoute } from "../../routers/AdminRoute";
 import { Footer } from "../../shared/Footer/Footer";
 import { Header } from "../../shared/Header/Header";
 import { Sidebar } from "../../shared/Sidebar/Sidebar";
+import { DriftingBackground } from "../../shared/Background/DriftingBackground";
 import { Cart } from "../Orders/Cart";
 import { OrderList } from "../Orders/OrderList/OrderList";
 import { Products } from "../Products/Products";
@@ -36,6 +37,7 @@ export const Home = () => {
   )
   return (
     <>
+      <DriftingBackground />
       <Layout style={{ minHeight: "100vh" }}>
         <Header productsQty={productsQty} onMenuClick={() => setMenuOpen((o) => !o)} />
         <Layout className="fullHeight">

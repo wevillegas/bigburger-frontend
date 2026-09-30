@@ -80,7 +80,7 @@ code {
 
 }
 
-button:not(.ant-btn-dangerous), .ant-btn:not(.ant-btn-dangerous), .ant-btn-primary:not(.ant-btn-dangerous), .ant-btn-default:not(.ant-btn-dangerous) {
+button:not(.ant-btn-dangerous), .ant-btn:not(.ant-btn-dangerous):not(.ant-btn-default), .ant-btn-primary:not(.ant-btn-dangerous) {
   border: 2px solid var(--color1) !important;
   background-color: var(--color3) !important;
   border-radius: var(--radius) !important;
@@ -93,14 +93,40 @@ button:not(.ant-btn-dangerous), .ant-btn:not(.ant-btn-dangerous), .ant-btn-prima
   transition: transform 120ms ease-out, box-shadow 120ms ease-out;
 }
 
-button:not(.ant-btn-dangerous):hover, .ant-btn:not(.ant-btn-dangerous):hover, .ant-btn-primary:not(.ant-btn-dangerous):hover, .ant-btn-default:not(.ant-btn-dangerous):hover {
+button:not(.ant-btn-dangerous):hover, .ant-btn:not(.ant-btn-dangerous):not(.ant-btn-default):hover, .ant-btn-primary:not(.ant-btn-dangerous):hover {
   transform: translate(-2px, -2px);
   box-shadow: 6px 6px 0 var(--color1) !important;
   color: var(--color1) !important;
   border-color: var(--color1) !important;
 }
 
-button:not(.ant-btn-dangerous):active, .ant-btn:not(.ant-btn-dangerous):active, .ant-btn-primary:not(.ant-btn-dangerous):active, .ant-btn-default:not(.ant-btn-dangerous):active {
+button:not(.ant-btn-dangerous):active, .ant-btn:not(.ant-btn-dangerous):not(.ant-btn-default):active, .ant-btn-primary:not(.ant-btn-dangerous):active {
+  transform: translate(2px, 2px);
+  box-shadow: 0 0 0 var(--color1) !important;
+}
+
+/* secondary/cancel actions recede: outline instead of the primary amber fill */
+.ant-btn-default:not(.ant-btn-dangerous) {
+  border: 2px solid var(--color1) !important;
+  background-color: var(--color5) !important;
+  border-radius: var(--radius) !important;
+  cursor: pointer;
+  color: var(--color1) !important;
+  font-family: var(--font-body);
+  font-weight: 600;
+  padding: 0.5rem 1rem;
+  box-shadow: var(--shadow-hard-sm) !important;
+  transition: transform 120ms ease-out, box-shadow 120ms ease-out, background-color 120ms ease-out, color 120ms ease-out;
+}
+
+.ant-btn-default:not(.ant-btn-dangerous):hover {
+  transform: translate(-2px, -2px);
+  box-shadow: 6px 6px 0 var(--color1) !important;
+  background-color: var(--color4) !important;
+  color: var(--color5) !important;
+}
+
+.ant-btn-default:not(.ant-btn-dangerous):active {
   transform: translate(2px, 2px);
   box-shadow: 0 0 0 var(--color1) !important;
 }
@@ -110,6 +136,102 @@ button:disabled {
   opacity: 0.5;
   box-shadow: none;
   transform: none;
+}
+
+/* modal close: a plain icon control, not a filled action button.
+   Nested selector (not :not() on the shared button rule) so it doesn't
+   raise that rule's specificity and break plain-button overrides elsewhere. */
+.ant-modal-content .ant-modal-close {
+  background-color: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
+  color: var(--grey2) !important;
+  padding: 0 !important;
+  width: 22px !important;
+  height: 22px !important;
+  top: 17px !important;
+  right: 17px !important;
+}
+
+/* antd's inner close-x wrapper is a fixed 56x56 box meant for the default
+   header height; without resizing it too, the icon centers inside that
+   oversized box instead of our 22x22 button and renders below it */
+.ant-modal-content .ant-modal-close .ant-modal-close-x {
+  width: 22px !important;
+  height: 22px !important;
+  line-height: 22px !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+}
+
+.ant-modal-content .ant-modal-close:hover {
+  color: var(--color2) !important;
+  transform: none !important;
+}
+
+.ant-modal-content {
+  border: 2px solid var(--color1);
+  border-radius: 0;
+  box-shadow: var(--shadow-hard);
+}
+
+.ant-modal-header {
+  border-bottom: 2px solid var(--color1);
+  border-radius: 0;
+}
+
+.ant-modal-title {
+  font-family: var(--font-body);
+  font-weight: 700;
+  color: var(--color1);
+}
+
+.ant-form-item-label > label {
+  font-family: var(--font-body);
+  font-weight: 600;
+  color: var(--color1);
+}
+
+.ant-input,
+.ant-input-affix-wrapper,
+.ant-input-number,
+.ant-select:not(.ant-select-customize-input) .ant-select-selector,
+textarea.ant-input {
+  border: 2px solid var(--color1) !important;
+  border-radius: 0 !important;
+  box-shadow: none !important;
+}
+
+.ant-input:hover,
+.ant-input-affix-wrapper:hover,
+.ant-input-number:hover,
+.ant-select:not(.ant-select-disabled):hover .ant-select-selector {
+  border-color: var(--color2) !important;
+}
+
+.ant-input:focus,
+.ant-input-focused,
+.ant-input-affix-wrapper-focused,
+.ant-input-number-focused,
+.ant-select-focused:not(.ant-select-disabled) .ant-select-selector {
+  border-color: var(--color3) !important;
+  box-shadow: 0 0 0 2px rgba(232, 163, 61, 0.3) !important;
+}
+
+.ant-checkbox-checked .ant-checkbox-inner,
+.ant-switch-checked {
+  background-color: var(--color3) !important;
+  border-color: var(--color1) !important;
+}
+
+.ant-checkbox-inner {
+  border-radius: 0 !important;
+  border: 2px solid var(--color1) !important;
+}
+
+.ant-checkbox-checked .ant-checkbox-inner::after {
+  border-color: var(--color1) !important;
 }
 
 @media screen and (max-width: 810px) {

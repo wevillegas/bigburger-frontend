@@ -5,18 +5,21 @@ import {  Button, Checkbox, Form, Input, Modal, Select, Typography } from 'antd'
 import { ProductList } from './ProductsList/ProductList'
 import { CheckCircleOutlined, CloseOutlined, PlusOutlined, WarningOutlined } from '@ant-design/icons'
 import TextArea from 'antd/lib/input/TextArea'
-import "./Products.css"
+import "./Products.scss"
 import { useAuth } from '../../auth/useAuth'
+import { PRODUCT_CATEGORIES } from '../../constants/categories'
 // const URL = 'http://localhost:3100/api'
 const { Option } = Select;
 
 const URL = process.env.REACT_APP_API_URL;
+const CATEGORY_FILTERS = ["Todas", ...PRODUCT_CATEGORIES]
 
 export const Products = () => {
     const auth= useAuth()
     const [products, productsState] = useState([])
     const [totalProducts, totalProductsUpdate] = useState(0)
     const [addOpen, setAddOpen] = useState(false)
+    const [categoryFilter, setCategoryFilter] = useState('Todas')
 
 
 
@@ -149,17 +152,37 @@ export const Products = () => {
 
 
 
+    const filteredProducts = categoryFilter === 'Todas'
+        ? products
+        : products.filter(p => p.categorie_id === categoryFilter)
+
     return (
         <>
             {/* INFORMACION PRINCIPAL */}
-            <div>
+            <div className="products-admin-page">
+                <Typography.Title level={1} className="stencil-title">Editar Productos</Typography.Title>
+
                 <div className="productsToolbar">
                     <Button type="primary" icon={<PlusOutlined />} onClick={() => setAddOpen(true)}>
                         Añadir producto
                     </Button>
                 </div>
-                <ProductList productsDBToList={products} deleteProduct={deleteModal} editModal={editProductModal} />
-                <h1>Total: {totalProducts}</h1>
+
+                <div className="category-filters">
+                    {CATEGORY_FILTERS.map(cat => (
+                        <button
+                            key={cat}
+                            type="button"
+                            className={`filter-chip${categoryFilter === cat ? ' active' : ''}`}
+                            onClick={() => setCategoryFilter(cat)}
+                        >
+                            {cat}
+                        </button>
+                    ))}
+                </div>
+
+                <ProductList productsDBToList={filteredProducts} deleteProduct={deleteModal} editModal={editProductModal} />
+                <p className="products-total">Total: {totalProducts}</p>
             </div>
 
             {/* MODAL DE ALTA */}
@@ -262,10 +285,9 @@ export const Products = () => {
                                 return { ...pre, categorie_id: e.target.value }
                             })
                         }}>
-                            <option value="Simples">Simples</option>
-                            <option value="Dobles">Dobles</option>
-                            <option value="Triples">Triples</option>
-                            <option value="Vegetarianas">Vegetarianas</option>
+                            {PRODUCT_CATEGORIES.map(cat => (
+                                <option key={cat} value={cat}>{cat}</option>
+                            ))}
                         </select>
                     </Form.Item>
 

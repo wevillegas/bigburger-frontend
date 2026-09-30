@@ -1,61 +1,212 @@
-.Columns {
-    margin: 15px;
-    border: 2px solid var(--grey4);
-    display: block;
+@import '../../../Context/Themes.scss';
 
-    .Active {
-        text-align: center;
-        width: 10px;
-        .checkbox{
-            justify-content: center;
-        }
-    }
-    .fullName {
-        width: 400px;
-        text-align: start;
-    }
-    .Email{
-        width: 400px;
+.stencil-title {
+    font-family: var(--font-display) !important;
+}
 
-    }
-    .Role{
-        width: 200px;
-        .spanRole{
-            font-style: oblique;
+.users-toolbar {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+}
+
+.role-filters {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.6rem;
+
+    .filter-chip {
+        font-family: var(--font-body);
+        font-weight: 600;
+        font-size: 0.85rem;
+        letter-spacing: 0.02em;
+        padding: 0.5rem 1.1rem !important;
+        background-color: var(--color5) !important;
+        color: var(--color1) !important;
+        border: 2px solid var(--color1) !important;
+        border-radius: var(--radius) !important;
+        cursor: pointer;
+        box-shadow: var(--shadow-hard-press) !important;
+        transition: transform 0.12s ease, box-shadow 0.12s ease, background-color 0.12s ease;
+
+        &:hover {
+            transform: translate(-1px, -1px);
+            box-shadow: var(--shadow-hard-sm) !important;
         }
-    }
-    .Actions{
-        width: 100px;
-        padding: 0px;
-        text-align: center;
-        .BtnD{
-            text-align: center;
+
+        &.active {
+            background-color: var(--color3) !important;
         }
     }
 }
-.ant-pagination {
-    justify-content: center !important;
+
+.user-search {
+    font-family: var(--font-body);
+    font-size: 0.9rem;
+    padding: 0.5rem 0.8rem;
+    border: 2px solid var(--color1);
+    border-radius: var(--radius);
+    background-color: var(--color5);
+    color: var(--color1);
+    min-width: 220px;
+
+    &::placeholder {
+        color: var(--grey3);
+    }
+
+    &:focus {
+        outline: none;
+        border-color: var(--color3);
+    }
+}
+
+.admin-empty {
+    color: var(--grey2);
+    font-family: var(--font-body);
+}
+
+.user-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.7rem;
+}
+
+.user-role-badge {
+    display: inline-flex;
+    align-items: center;
+    padding: 0.3rem 0.7rem;
+    font-size: 0.78rem;
+    font-weight: 700;
+    border: 2px solid var(--color1);
+    white-space: nowrap;
+
+    &.user-role-badge--ADMINISTRADOR {
+        background-color: var(--color1);
+        color: var(--color5);
+    }
+
+    &.user-role-badge--USUARIO {
+        background-color: var(--color5);
+        color: var(--color1);
+    }
+}
+
+.user-card {
+    display: grid;
+    grid-template-columns: 44px 1fr auto auto auto;
+    align-items: center;
+    gap: 1rem;
+    padding: 0.7rem 1rem;
+    background-color: var(--color5);
+    border: 2px solid var(--color1);
+    box-shadow: var(--shadow-hard-sm);
+    transition: transform 0.15s ease, box-shadow 0.15s ease;
+
+    &:hover {
+        transform: translate(-2px, -2px);
+        box-shadow: var(--shadow-hard);
+    }
+
+    .user-card-avatar {
+        width: 44px;
+        height: 44px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background-color: var(--color1);
+        color: var(--color5);
+        font-family: var(--font-display);
+        font-size: 1.1rem;
+        flex-shrink: 0;
+    }
+
+    .user-card-info {
+        display: flex;
+        flex-direction: column;
+        min-width: 0;
+
+        .user-card-name {
+            font-weight: 700;
+            color: var(--color1);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .user-card-email {
+            font-size: 0.82rem;
+            color: var(--grey2);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+    }
+
+    .user-active-toggle {
+        display: flex;
+        align-items: center;
+        gap: 0.4rem;
+        font-size: 0.82rem;
+        color: var(--grey2);
+        white-space: nowrap;
+        cursor: pointer;
+
+        input {
+            accent-color: var(--color3);
+            width: 16px;
+            height: 16px;
+            cursor: pointer;
+        }
+    }
+
+    .user-card-actions {
+        display: flex;
+        gap: 0.4rem;
+
+        button {
+            width: 32px;
+            height: 32px;
+            padding: 0 !important;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: var(--shadow-hard-press) !important;
+
+            &.danger {
+                background-color: var(--color5) !important;
+                color: var(--color2) !important;
+            }
+        }
+    }
 }
 
 @media screen and (max-width: 700px) {
-    .Columns{
-        align-items: center;
-        margin: 0px;
-        width: 100%;
-        .Active{
-            width: 50px;
-        }
-        .fullName{
-            display: none;
-        }
-        .Email{
-            width: 150px;
-        }
-        .Role{
-            width: 100px;
-        }
-        .Actions{
-            width: 50px;
-        }
+    .user-card {
+        grid-template-columns: 36px 1fr auto;
+        grid-template-areas:
+            "avatar info actions"
+            "role role toggle";
+        row-gap: 0.5rem;
+
+        .user-card-avatar { grid-area: avatar; width: 36px; height: 36px; }
+        .user-card-info { grid-area: info; }
+        .user-card-actions { grid-area: actions; }
+        .user-role-badge { grid-area: role; justify-self: start; }
+        .user-active-toggle { grid-area: toggle; justify-self: end; }
+    }
+
+    .users-toolbar {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .user-search {
+        min-width: 0;
     }
 }

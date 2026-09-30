@@ -42,7 +42,7 @@ export const Sidebar = ({productsQty, onNavigate}) => {
 
       <Menu theme="dark" mode="inline" className="sider" selectedKeys={[selectedKey]} onClick={() => onNavigate?.()}>
         <Menu.Item key="1" icon={<HomeOutlined />}>
-          <NavLink to="/">Inicio</NavLink>
+          <NavLink to="/">Menú</NavLink>
         </Menu.Item>
         <Menu.Item key="2" icon={<ShoppingCartOutlined />} className="cart">
           <NavLink to="/cart">

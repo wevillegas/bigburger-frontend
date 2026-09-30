@@ -10,7 +10,7 @@ export const Error = () => {
         <div className="error">
             <Typography.Title  className="error" level="2">Algun ingrediente salio mal</Typography.Title>
         </div>
-        <button><NavLink className="button" to="/">Inicio</NavLink></button>
+        <button><NavLink className="button" to="/">Menú</NavLink></button>
     </section>
     </>
   )

@@ -1,87 +1,58 @@
 import { DeleteOutlined, EditOutlined } from '@ant-design/icons';
-import { Checkbox, Button, Row, Pagination } from 'antd';
-import { Table, Space } from 'antd';
+import React from 'react'
 import './userList.scss'
-import '../../Orders/OrderList/OrderList.scss'
-const { Column } = Table
-export const ListaUsuarios = ({ functionDelete, handleActiveStatus, users, functionEditUser}) => {
+
+const ROLE_LABEL = { ADMINISTRADOR: 'Administrador', USUARIO: 'Usuario' };
+
+export const ListaUsuarios = ({ functionDelete, handleActiveStatus, users, functionEditUser }) => {
+
+    if (users.length === 0) {
+        return <p className="admin-empty">No hay usuarios que coincidan con la búsqueda.</p>
+    }
 
     return (
-        <>
-            <Table className='Columns tabla' dataSource={users} rowKey="_id" scroll={{ x: 'max-content' }}>
-                <Column className="Active"
-                    title="Active"
-                    key="action"
-                    dataIndex="active"
-                    
-                    render={(active, user) => (
-                        <Space size="small">
-                            {/* CHECKBOX STATUS  */}
-                            <Checkbox className='checkbox'
-                                checked={active}
-                                onChange={(e) => {
-                                    handleActiveStatus(e.target.checked, 'active', user._id)
-                                }}
-                            >
-                            </Checkbox>
+        <ul className="user-list">
+            {users.map((user) => (
+                <li className="user-card" key={user._id}>
+                    <div className="user-card-avatar">{user.fullName?.[0]?.toUpperCase()}</div>
 
-                        </Space>
-                    )}
-                />
+                    <div className="user-card-info">
+                        <span className="user-card-name">{user.fullName}</span>
+                        <span className="user-card-email">{user.email}</span>
+                    </div>
 
-                <Column className="fullName"
-                    title="Nombre y Apellido" 
-                    dataIndex="fullName" 
-                    key="fullName" 
-                    
-                    />
+                    <span className={`user-role-badge user-role-badge--${user.role}`}>
+                        {ROLE_LABEL[user.role] || user.role}
+                    </span>
 
-                <Column className="Email"
-                    title="Correo electrónico" 
-                    dataIndex="email" 
-                    key="email" 
-                    
-                />
-                <Column className="Role"
-                    title="Rol"
-                    dataIndex="role"
-                    key="role"
-                    render={(role) => (
-                        <span className='spanRole'>{role}</span>
-                    )}
-                    
-                />
+                    <label className="user-active-toggle">
+                        <input
+                            type="checkbox"
+                            checked={user.active}
+                            onChange={(e) => handleActiveStatus(e.target.checked, 'active', user._id)}
+                        />
+                        {user.active ? 'Activo' : 'Inactivo'}
+                    </label>
 
-                <Column className="Actions"
-                    title="Editar"
-                    key="EditarUsuario"
-                    
-                    render={(user) => (
-                        <Space size="middle">
-                            <Button type="secondary" onClick={() => functionEditUser(user, user._id)}>
-                                <EditOutlined />
-                            </Button>
-                        </Space>
-                    )}
-                />
-
-                <Column className="Actions"
-                    title="Eliminar"
-                    key="DeleteUser"
-                    
-                    render={(user) => (
-                        <Space size="middle">
-                            {/* BOTON PARA BORRAR  */}
-                            <Button type='primary' className='BtnD' danger onClick={() => functionDelete(user._id)}><DeleteOutlined /></Button>
-                        </Space>
-                    )}
-                />
-                {/* <Pagination defaultCurrent={1} total={50} />; */}
-
-            </Table>;
-
-        </>
+                    <div className="user-card-actions">
+                        <button
+                            type="button"
+                            aria-label={`Editar ${user.fullName}`}
+                            onClick={() => functionEditUser(user, user._id)}
+                        >
+                            <EditOutlined />
+                        </button>
+                        <button
+                            type="button"
+                            className="danger"
+                            aria-label={`Eliminar ${user.fullName}`}
+                            onClick={() => functionDelete(user._id)}
+                        >
+                            <DeleteOutlined />
+                        </button>
+                    </div>
+                </li>
+            ))}
+        </ul>
     )
-
 }
-

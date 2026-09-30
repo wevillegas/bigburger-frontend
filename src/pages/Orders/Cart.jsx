@@ -1,122 +1,160 @@
-import { CheckCircleOutlined, DeleteOutlined } from "@ant-design/icons";
-import { InputNumber, Layout, Modal, PageHeader, Typography } from "antd";
+import { DeleteOutlined, MinusOutlined, PlusOutlined, ShoppingOutlined } from "@ant-design/icons";
+import { Modal, Typography } from "antd";
 import axios from "axios";
 import React, { useEffect, useState } from "react";
-// import { URL } from "../../constants/endpoints";
-import "./Cart.scss";
+import { Link } from "react-router-dom";
 import { useAuth } from "../../auth/useAuth";
+import "./Cart.scss";
+
 const URL = process.env.REACT_APP_API_URL;
-export const Cart = ({bCount}) => {
 
-const auth = useAuth()
-
+export const Cart = ({ bCount }) => {
+  const auth = useAuth();
   const initialCart = JSON.parse(localStorage.getItem("inCart")) || [];
 
   const [order, setOrder] = useState(initialCart);
-  localStorage.setItem("inCart", JSON.stringify(order));
+  const [submitting, setSubmitting] = useState(false);
 
-  //Eliminar item completo
+  useEffect(() => {
+    localStorage.setItem("inCart", JSON.stringify(order));
+    bCount(order);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [order]);
+
+  const total = order.reduce((sum, item) => sum + item.price * item.cantidad, 0);
+
   const removeFromCart = (id) => {
-    const updateOrder = order.filter((item) => item._id !== id);
-    setOrder(updateOrder);
-    totalToPay()
-
-    bCount(order)
+    setOrder((prev) => prev.filter((item) => item._id !== id));
   };
-  
-  //   Cambiar cantidad en input number
-    const changeQuantity = (id,value)=>{
-      const index=order.findIndex(item => item._id===id)
-      const item= order[index]
-      let item1={...item, cantidad:value}
-      order.splice(index,1,item1)
-      setOrder(order)
-      totalToPay()
-      bCount(order)
 
-   }
-
-  const[ total, updTotal]=useState(0)
-  const totalToPay = ()=>{
-       
-    const sumTotal = order.reduce((counter,item)=>
-      counter + (item.price*item.cantidad),0
+  const changeQuantity = (id, value) => {
+    if (value < 1) return;
+    setOrder((prev) =>
+      prev.map((item) => (item._id === id ? { ...item, cantidad: value } : item))
     );
-    updTotal(sumTotal)
-  }
- // updateTotalToPay(total)
-  const addItem = () => {
-    //chequear si el producto agregado ya existe en la lista
-    //IF no existe agregar producto a la lista de local storage ELSE sumar una unidad
   };
-  const sendOrder = async (user,menu)=>{
-    const ticket ={
-      user:user,
-      menu:menu,
-      total:total              }
-    const sendTicket = await axios.post(`${URL}/order`, ticket)
-    console.log('Enviar orden', ticket)
-    Modal.info({
-      title: 'Orden enviada',
-      icon: <CheckCircleOutlined style={{ color: "#52c41a" }} />,
-      content: `Recibimos tu pedido correctamente, su total a abonar es $${total}`,
-      okText: 'Ok',
-      okType: "ghost"
 
-  })
+  const changeNote = (id, note) => {
+    setOrder((prev) =>
+      prev.map((item) => (item._id === id ? { ...item, note } : item))
+    );
+  };
 
-   setOrder([])
+  const sendOrder = async () => {
+    setSubmitting(true);
+    try {
+      const ticket = { user: auth.user, menu: order, total };
+      await axios.post(`${URL}/order`, ticket);
+      setOrder([]);
+      Modal.success({
+        title: "Orden enviada",
+        content: `Recibimos tu pedido correctamente, su total a abonar es $${total}`,
+        okText: "Ok",
+      });
+    } catch (error) {
+      Modal.error({
+        title: "No pudimos enviar tu pedido",
+        content: "Revisá tu conexión e intentá nuevamente",
+        okText: "Ok",
+      });
+    } finally {
+      setSubmitting(false);
+    }
+  };
+
+  if (order.length === 0) {
+    return (
+      <div className="cart-empty">
+        <ShoppingOutlined className="cart-empty-icon" />
+        <h2>Tu carrito está vacío</h2>
+        <p>Agregá productos desde el menú para armar tu pedido.</p>
+        <Link to="/" className="cart-empty-cta">Ver el menú</Link>
+      </div>
+    );
   }
-  
-  useEffect(()=>{
-    totalToPay()
-    bCount(order)
-
-   }
-  ,[order]
-    
-
-  )
 
   return (
-    <>
-      <div className="order-header">
-      <Typography.Title level={1}>Mi Pedido</Typography.Title>
+    <div className="cart-page">
+      <div className="cart-header">
+        <Typography.Title level={1}>Mi Pedido</Typography.Title>
+        <span className="cart-count">
+          {order.length} {order.length === 1 ? "producto" : "productos"}
+        </span>
       </div>
-      <div className="order-body">
-        <h2>Estas llevando:</h2>
-        {order.map((item, index) => (
-          // <CartItem data={item} index={index} key={item._id}removeFromCart={removeFromCart} total={()=>totalToPay()} />
-          <div className='order-card'key={item._id} data={item} index={index} >
-          <img className='order-img'src={item.IMG} alt='' />
-          <div className='order-detail'>
-              <h4>{item.name}</h4>
-              <div className='order-data'>
-                  <div className='item-price'>${item.price}</div>
-                  <div className='item-edit'>
-                      <label htmlFor="qty">Cantidad: </label>
-                      
-                      <InputNumber 
-                      min={1}
-                      defaultValue={item.cantidad}
-                      onChange={(value)=>changeQuantity(item._id,value)}
-                      />
-                      
-                  </div>
-                  <button onClick={()=>removeFromCart(item._id)}><DeleteOutlined /></button>
+
+      <div className="cart-layout">
+        <ul className="cart-items">
+          {order.map((item, i) => (
+            <li className="cart-item" key={item._id} style={{ "--i": i }}>
+              <img className="cart-item-img" src={item.IMG} alt={item.name} />
+
+              <div className="cart-item-info">
+                <h3>{item.name}</h3>
+                <span className="cart-item-unit">${item.price} c/u</span>
+                <input
+                  type="text"
+                  className="cart-item-note"
+                  placeholder="Aclaración (ej: sin cebolla)"
+                  maxLength={120}
+                  value={item.note || ""}
+                  aria-label={`Aclaración para ${item.name}`}
+                  onChange={(e) => changeNote(item._id, e.target.value)}
+                />
               </div>
+
+              <div className="cart-item-stepper">
+                <button
+                  type="button"
+                  aria-label={`Restar unidad de ${item.name}`}
+                  disabled={item.cantidad <= 1}
+                  onClick={() => changeQuantity(item._id, item.cantidad - 1)}
+                >
+                  <MinusOutlined />
+                </button>
+                <span className="cart-item-qty">{item.cantidad}</span>
+                <button
+                  type="button"
+                  aria-label={`Sumar unidad de ${item.name}`}
+                  onClick={() => changeQuantity(item._id, item.cantidad + 1)}
+                >
+                  <PlusOutlined />
+                </button>
+              </div>
+
+              <div className="cart-item-subtotal">${item.price * item.cantidad}</div>
+
+              <button
+                type="button"
+                className="cart-item-remove"
+                aria-label={`Quitar ${item.name} del carrito`}
+                onClick={() => removeFromCart(item._id)}
+              >
+                <DeleteOutlined />
+              </button>
+            </li>
+          ))}
+        </ul>
+
+        <div className="cart-summary">
+          <h2>Resumen</h2>
+          <div className="cart-summary-row">
+            <span>Subtotal</span>
+            <span>${total}</span>
           </div>
+          <div className="cart-summary-total">
+            <span>Total</span>
+            <span>${total}</span>
+          </div>
+          <button
+            type="button"
+            className="cart-checkout-btn"
+            disabled={submitting}
+            onClick={sendOrder}
+          >
+            {submitting ? "Enviando..." : "Confirmar pedido"}
+          </button>
+        </div>
       </div>
-        ))}
-      </div>
-      <div className="order-checkout">
-
-      
-        <div className="total-amount">
-        <Typography.Title level={3}>Total: ${total||0}</Typography.Title></div>
-
-        <button onClick={()=>sendOrder(auth.user,order,total)}>Confirmar Orden</button>
-      </div>
-    </>
+    </div>
   );
 };

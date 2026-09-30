@@ -1,0 +1,50 @@
+.drifting-bg {
+    position: fixed;
+    inset: 0;
+    overflow: hidden;
+    pointer-events: none;
+    /* negative z-index: keeps this behind every normal-flow element (header,
+       sidebar, cards, footer) even though position:fixed content would
+       otherwise paint above non-positioned siblings regardless of DOM order */
+    z-index: -1;
+}
+
+.drifter-container {
+    position: absolute;
+    left: -10vw;
+    animation-name: drift;
+    animation-timing-function: linear;
+    animation-iteration-count: infinite;
+}
+
+.drifter-triangle {
+    clip-path: polygon(50% 0%, 0% 100%, 100% 100%);
+    animation-name: bob;
+    animation-timing-function: ease-in-out;
+    animation-iteration-count: infinite;
+    animation-direction: alternate;
+}
+
+@keyframes drift {
+    0% {
+        transform: translateX(0) translateY(var(--y-start)) rotateZ(var(--r-start));
+    }
+    100% {
+        transform: translateX(120vw) translateY(var(--y-end)) rotateZ(var(--r-end));
+    }
+}
+
+@keyframes bob {
+    0% {
+        transform: translateY(-8px) scale(var(--s, 1));
+    }
+    100% {
+        transform: translateY(8px) scale(var(--s, 1));
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .drifting-bg {
+        display: none;
+    }
+}
