@@ -203,6 +203,14 @@ textarea.ant-input {
   box-shadow: none !important;
 }
 
+/* an input with a prefix/suffix icon renders as <span class="ant-input-affix-wrapper"><input class="ant-input">,
+   so the rule above borders both boxes, nesting one inside the other. Only the outer wrapper should draw a border. */
+.ant-input-affix-wrapper > input.ant-input,
+.ant-input-affix-wrapper > .ant-input {
+  border: none !important;
+  box-shadow: none !important;
+}
+
 .ant-input:hover,
 .ant-input-affix-wrapper:hover,
 .ant-input-number:hover,
