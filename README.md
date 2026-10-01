@@ -1,70 +1,56 @@
-# Getting Started with Create React App
+# BigBurger — Frontend
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+![CI](https://github.com/wevillegas/bigburger-frontend/actions/workflows/ci.yml/badge.svg)
 
-## Available Scripts
+Frontend de BigBurger, una app de pedidos de comida rápida (mini e-commerce) hecha como proyecto de portfolio: catálogo, carrito, checkout con o sin cuenta, seguimiento de pedidos, panel admin (productos/usuarios/órdenes) y un programa de puntos de fidelidad.
 
-In the project directory, you can run:
+Repo hermano: [bigburger-backend](https://github.com/wevillegas/bigburger-backend) (API + modelo de datos).
 
-### `npm start`
+## Stack
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+- React 18 (Create React App) + React Router v6
+- Ant Design (antd) como librería de componentes
+- Sass para estilos
+- axios para la capa HTTP
+- Tests: Jest + React Testing Library (vía `react-scripts test`)
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+## Setup local
 
-### `npm test`
+```bash
+npm install
+cp .env.example .env.local   # apuntar REACT_APP_API_URL al backend
+npm run dev                    # http://localhost:3000
+```
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+Requiere el backend corriendo en paralelo (ver su README) para que el login, el catálogo y el checkout funcionen.
 
-### `npm run build`
+### Variables de entorno
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+| Variable | Descripción |
+|---|---|
+| `REACT_APP_API_URL` | URL base de la API backend (ej. `http://localhost:3100/api`) |
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+## Tests
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+```bash
+npm test
+```
 
-### `npm run eject`
+Tests unitarios sobre:
+- `src/utils/ticket.js` y `src/utils/date.js`: formateo de tickets y fechas, funciones puras.
+- `src/pages/Orders/Cart.jsx`: flujo de checkout de invitado — cálculo de subtotal, validación de datos obligatorios antes de confirmar, y payload enviado al backend.
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+## CI
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+GitHub Actions (`.github/workflows/ci.yml`) corre la suite de tests en cada push/PR.
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+## Capturas
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+_Pendiente: agregar screenshots del catálogo, carrito y panel admin antes de compartir el repo._
 
-## Learn More
+## Decisiones de arquitectura
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
-
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+- **Roles en un solo layout**: `Home` + `Sidebar` condicionan qué páginas ve cada rol (cliente vs. admin) en vez de tener dos apps/layouts separados, porque comparten header, auth y navegación.
+- **Carrito en `localStorage`, reconciliado contra el catálogo al entrar**: el carrito sobrevive a un refresh sin pedir login, pero si un producto cambió de precio o se quedó sin stock desde que se agregó, se sincroniza (y avisa al usuario) al abrir `Cart`; el backend igual revalida todo al confirmar.
+- **`AuthProvider` + contexto único para user/token**: evita pasar props de autenticación por toda la jerarquía; `useAuth()` es el único punto de acceso, y un interceptor de axios desloguea automáticamente ante un 401/403 del backend.
+- **Checkout sin cuenta como primera clase, no como excepción**: `Cart` arma un payload distinto (nombre/teléfono vs. token) según haya o no sesión, en vez de forzar registro para comprar.

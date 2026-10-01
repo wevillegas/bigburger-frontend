@@ -28,7 +28,7 @@ export const Header = ({productsQty, onMenuClick}) => {
         {!isAdmin && (
           <NavLink className="nav-cart" to="/cart">
             <ShoppingCartOutlined />
-            <span>Carrito</span>
+            <span className="nav-cart-label">Carrito</span>
             <Badge count={productsQty} className='badge' showZero />
           </NavLink>
         )}

@@ -4,7 +4,8 @@
     background-color: var(--color1) !important;
 }
 .ant-menu-item-selected, .ant-menu-item:hover {
-    background-color: var(--color4) !important;
+    background-color: var(--color3) !important;
+    color: var(--color1) !important;
 }
 .ant-switch-checked {
     background-color: var(--color3) !important;

@@ -121,38 +121,105 @@
         }
     }
 
-    .order-card-header--admin {
+}
+
+// Admin order card (OrderList.jsx). Scoped via :has() off the admin-only
+// `.order-card-toggle` direct child so the customer-facing MyOrders card —
+// which shares .order-card/.orders-page/this stylesheet but keeps its
+// original single `.order-card-header` button — is never touched.
+//
+// Desktop: one single-line card, exactly like the original layout — the
+// name/tag/date/chevron rows are unwrapped (display: contents) so they flow
+// as one row alongside the price + actions. One li, one background, no
+// internal divider.
+// Mobile (<=560px): the same markup re-stacks into the three rows the
+// client asked for (name+tag / date / price+actions) — see the media query
+// at the bottom of this file. No JSX branching, same DOM both ways.
+.order-card:has(> .order-card-toggle) {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+
+    .order-card-toggle {
         display: flex;
-        flex-wrap: wrap;
-        justify-content: space-between;
-        padding: 0.7rem 1.1rem !important;
+        align-items: center;
+        flex: 1 1 auto;
+        min-width: 0;
+        gap: 0.9rem;
+        background-color: transparent !important;
+        border: none !important;
+        box-shadow: none !important;
+        padding: 0.9rem 1.1rem !important;
+        cursor: pointer;
+        font-family: var(--font-body);
+        color: var(--color1) !important;
+        text-align: left;
+        transition: background-color 160ms ease;
 
-        .order-card-toggle {
-            display: grid;
-            grid-template-columns: 1fr auto auto;
-            align-items: center;
-            gap: 1rem;
-            flex: 1 1 260px;
-            background-color: transparent !important;
-            border: none !important;
+        &:hover {
+            background-color: rgba(43, 47, 51, 0.04) !important;
+            transform: none !important;
             box-shadow: none !important;
-            padding: 0.2rem 0 !important;
-            cursor: pointer;
-            font-family: var(--font-body);
-            color: var(--color1) !important;
-            text-align: left;
+        }
 
-            &:hover {
-                background-color: transparent !important;
-                transform: none !important;
-                box-shadow: none !important;
-            }
+        &:active {
+            transform: none !important;
+        }
 
-            &:active {
-                transform: none !important;
-            }
+        .order-card-row--name,
+        .order-card-row--date {
+            display: contents;
         }
     }
+
+    .order-card-label {
+        order: 1;
+        min-width: 0;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+
+    .order-card-channel-tag {
+        order: 2;
+    }
+
+    .order-card-datetime {
+        order: 3;
+        font-size: 0.85rem;
+        font-weight: 500;
+        color: var(--grey2);
+        white-space: nowrap;
+    }
+
+    .order-card-chevron {
+        order: 4;
+        margin-left: auto;
+    }
+
+    .order-card-row--actions {
+        flex: 0 0 auto;
+        padding: 0.9rem 1.1rem !important;
+        gap: 0.9rem;
+    }
+
+    .order-card-body-wrap {
+        flex: 1 1 100%;
+    }
+}
+
+.order-card-row {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+}
+
+.order-card-actions {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 0.5rem;
 }
 
 .order-card--realizado {
@@ -284,7 +351,6 @@
     width: 38px;
     height: 38px;
     padding: 0 !important;
-    margin-left: 0.6rem;
     background-color: var(--color5) !important;
     color: var(--color1) !important;
     border: 2px solid var(--color1) !important;
@@ -487,15 +553,6 @@
         }
     }
 
-    .order-card-header--admin {
-        flex-direction: column;
-        align-items: stretch;
-
-        .order-status-toggle {
-            align-self: flex-start;
-        }
-    }
-
     .order-line {
         grid-template-columns: 36px 1fr auto;
         grid-template-areas:
@@ -507,5 +564,41 @@
         .order-line-info { grid-area: info; }
         .order-line-qty { grid-area: qty; }
         .order-line-subtotal { grid-area: subtotal; }
+    }
+
+    // Admin order card re-stacks into the 3 requested rows: name+tag,
+    // date, price+actions. Same markup as desktop — only re-flows it.
+    .order-card:has(> .order-card-toggle) {
+        flex-direction: column;
+        align-items: stretch;
+
+        .order-card-toggle {
+            flex-direction: column;
+            align-items: stretch;
+            gap: 0.3rem;
+            padding: 0.7rem 0.9rem 0.5rem !important;
+
+            .order-card-row--name,
+            .order-card-row--date {
+                display: flex;
+            }
+        }
+
+        .order-card-label,
+        .order-card-channel-tag,
+        .order-card-datetime,
+        .order-card-chevron {
+            order: initial;
+            margin-left: 0;
+        }
+
+        .order-card-chevron {
+            margin-left: auto;
+        }
+
+        .order-card-row--actions {
+            justify-content: space-between;
+            padding: 0.5rem 0.9rem 0.7rem !important;
+        }
     }
 }

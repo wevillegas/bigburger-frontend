@@ -63,7 +63,7 @@
         text-decoration: none;
         transition: transform 120ms ease-out, box-shadow 120ms ease-out, background-color 120ms ease-out, color 120ms ease-out;
 
-        span {
+        .nav-cart-label {
             font-family: var(--font-body);
             font-weight: 600;
             font-size: 0.95rem;
@@ -95,7 +95,7 @@
     }
 
     @media screen and (min-width: 560px) {
-        .nav-cart span {
+        .nav-cart .nav-cart-label {
             display: inline;
         }
     }

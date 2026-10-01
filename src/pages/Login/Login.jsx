@@ -1,12 +1,10 @@
-import { Button, Checkbox, Form, Input, Modal } from "antd";
+import { Button, Form, Input, Modal } from "antd";
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { Header } from "../../shared/Header/Header";
-import  "./Login.scss"
-// import { URL } from "../../constants/endpoints";
+import "./Login.scss"
 import axios from "axios";
 import { useAuth } from "../../auth/useAuth";
-import { CheckCircleOutlined } from "@ant-design/icons";
+import { CheckCircleOutlined, LockOutlined, MailOutlined, UserOutlined } from "@ant-design/icons";
 
 const URL = process.env.REACT_APP_API_URL;
 
@@ -18,7 +16,7 @@ export const Login = () => {
     auth.login(loginData)
 
   }
-  
+
   const [isModalVisible, setIsModalVisible] = useState(false);
   const validationOn = true;
   const showModal = () => {
@@ -32,167 +30,169 @@ export const Login = () => {
     setIsModalVisible(false);
   };
   const registerUser = async (formData)=>{
-    console.log(formData)
     try{
       const { data } =await axios.post(`${URL}/user`, formData)
       console.log("data ususario", data.usuarioNuevo)
       Modal.info({
-        title: 'Usuario creado',
+        title: 'Cuenta creada',
         icon: <CheckCircleOutlined style={{ color: "#52c41a" }} />,
-        content: `Su usuario a sido creado exitosamente`,
+        content: `Tu cuenta se creó correctamente`,
         okText: 'Ok',
         okType: "ghost"
 
     })
+    setIsModalVisible(false);
     onLogin(formData)
     }catch(err){
       console.log(err);
     }
   }
- 
+
   return (
     <div className="loginPage">
-      <h1 className="wordmark">BIGBURGER</h1>
-      <p className="wordmarkSub">Planta de pedidos N.º 01</p>
-      <div className="formContainer">
-      <Form
-        name="basic"
-        labelCol={{
-          span: 8,
-        }}
-        wrapperCol={{
-          span: 10,
-        }}
-        initialValues={{
-          remember: true,
-        }}
-        autoComplete="on"
-        className=" formBlock"
-        onFinish={onLogin}
-      >
-        <Form.Item
-          label="Email"
-          name={"email"}
-          
-          rules={[
-            {
-              required: validationOn,
-              message: "Introduzca un email!",
-            },
-          ]}
-          
-        >
-          <Input maxLength={30} placeholder="big@burger.com"/>
-        </Form.Item>
+      <div className="loginBrand">
+        <div className="loginBrand-mark">
+          <svg width="40" height="40" viewBox="0 0 26 26" aria-hidden="true" focusable="false">
+            <polygon points="0,26 13,0 13,26" fill="var(--color3)" />
+            <polygon points="13,26 13,0 26,26" fill="var(--color5)" />
+          </svg>
+          <div>
+            <h1 className="wordmark">BIGBURGER</h1>
+            <p className="wordmarkSub">Planta de pedidos N.º 01</p>
+          </div>
+        </div>
 
-        <Form.Item
-          label="Password"
-          name={"password"}
-          
-          rules={[
-            {
-              required: validationOn,
-              message: "Introduzca un a contraseña!",
-            },
-          ]}
-        >
-          <Input.Password maxLength={30}/>
-        </Form.Item>
-        <Form.Item
-          name="register"
-          wrapperCol={{
-            offset: 8,
-            span: 16,
-          }}
-          
-        >
-          <a onClick={showModal}>Register</a>
-          
-        </Form.Item>
-        
-        <Form.Item
-          wrapperCol={{
-            offset: 8,
-            span: 16,
-          }}
-        >
-          <Button type="primary" htmlType="submit">
-            Login
-          </Button>
-        </Form.Item>
-      </Form>
-      <Button className="guestBtn" block onClick={() => navigate("/")}>
-        Entrar como invitado
-      </Button>
+        <dl className="loginBrand-plate">
+          <div>
+            <dt>Módulo</dt>
+            <dd>Pedidos &amp; cuenta</dd>
+          </div>
+          <div>
+            <dt>Acceso</dt>
+            <dd>Clientes y staff</dd>
+          </div>
+        </dl>
       </div>
-      
-          {/*===== Modal de Registro ======*/}
+
+      <div className="loginFormZone">
+        <div className="loginCard">
+          <span className="loginCard-tag">Ficha de acceso</span>
+          <h2 className="loginCard-title">Iniciá sesión</h2>
+
+          <Form
+            name="login"
+            layout="vertical"
+            initialValues={{ remember: true }}
+            autoComplete="on"
+            className="loginForm"
+            onFinish={onLogin}
+            requiredMark={false}
+          >
+            <Form.Item
+              label="Email"
+              name="email"
+              rules={[{ required: validationOn, message: "Ingresá tu email" }]}
+            >
+              <Input maxLength={30} placeholder="big@burger.com" prefix={<MailOutlined />} />
+            </Form.Item>
+
+            <Form.Item
+              label="Contraseña"
+              name="password"
+              rules={[{ required: validationOn, message: "Ingresá tu contraseña" }]}
+            >
+              <Input.Password maxLength={30} prefix={<LockOutlined />} />
+            </Form.Item>
+
+            <Form.Item className="loginForm-submit">
+              <Button type="primary" htmlType="submit" block>
+                Ingresar
+              </Button>
+            </Form.Item>
+          </Form>
+
+          <div className="loginCard-divider" role="separator">
+            <span>o</span>
+          </div>
+
+          <Button block onClick={() => navigate("/")}>
+            Entrar como invitado
+          </Button>
+
+          <p className="loginCard-footer">
+            ¿No tenés cuenta todavía? <a onClick={showModal}>Creá una</a>
+          </p>
+        </div>
+      </div>
+
+      {/*===== Modal de Registro ======*/}
       <Modal
-        title="Register"
+        title="Crear cuenta"
         visible={isModalVisible}
         onOk={handleOk}
         onCancel={handleCancel}
+        footer={null}
       >
         <Form
-          name="Register"
-          labelCol={{ span: 8 }}
-          wrapperCol={{ span: 16 }}
+          name="register"
+          layout="vertical"
           initialValues={{ remember: true }}
           onFinish={registerUser}
           autoComplete="off"
+          requiredMark={false}
         >
           <Form.Item
-            label="Nombre Completo"
-            name={"fullName"}
-            rules={[{ required: validationOn, message: "Ingrese un nombre válido!" }]}
+            label="Nombre completo"
+            name="fullName"
+            rules={[{ required: validationOn, message: "Ingresá un nombre válido" }]}
           >
-            <Input maxLength={30} type='string'/>
+            <Input maxLength={30} prefix={<UserOutlined />} />
           </Form.Item>
           <Form.Item
             label="Email"
-            name={"email"}
-            rules={[{ required: validationOn, message: "Ingrese un email válido!" },{
-              type: 'email',
-              message: 'Ingrese un email válido!',
-            },]}
+            name="email"
+            rules={[
+              { required: validationOn, message: "Ingresá un email válido" },
+              { type: 'email', message: 'Ingresá un email válido' },
+            ]}
           >
-            <Input maxLength={30} />
+            <Input maxLength={30} prefix={<MailOutlined />} />
           </Form.Item>
 
           <Form.Item
             label="Contraseña"
-            name={"password"}
-            rules={[{ required: validationOn, message: "Ingrese una contraseña!" }, {min:8,message:"La contraseña debe tener 8 o más caracteres"}]}
+            name="password"
+            rules={[
+              { required: validationOn, message: "Ingresá una contraseña" },
+              { min: 8, message: "La contraseña debe tener 8 o más caracteres" },
+            ]}
             hasFeedback
           >
-            <Input.Password maxLength={30}/>
+            <Input.Password maxLength={30} prefix={<LockOutlined />} />
           </Form.Item>
-            
+
           <Form.Item
             name="confirm"
-            label="Confirmar Contraseña"
+            label="Confirmar contraseña"
             dependencies={['password']}
             hasFeedback
             rules={[
-              {
-                required: true,
-                message: 'Este campo debe ser rellenado',
-              },
+              { required: true, message: 'Repetí la contraseña' },
               ({ getFieldValue }) => ({
                 validator(_, value) {
                   if (!value || getFieldValue('password') === value) {
                     return Promise.resolve();
                   }
-                  return Promise.reject(new Error('La contraseña no coincide con la ingresada!'));
+                  return Promise.reject(new Error('Las contraseñas no coinciden'));
                 },
               }),
             ]}
           >
-            <Input.Password />
+            <Input.Password prefix={<LockOutlined />} />
           </Form.Item>
-          <Form.Item wrapperCol={{ offset: 8, span: 16 }}>
-            <Button type="primary" htmlType="submit">
-              Register
+          <Form.Item className="loginForm-submit">
+            <Button type="primary" htmlType="submit" block>
+              Crear cuenta
             </Button>
           </Form.Item>
         </Form>

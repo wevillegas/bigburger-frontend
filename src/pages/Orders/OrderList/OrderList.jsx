@@ -177,56 +177,62 @@ export const OrderList = () => {
             const isOpen = expanded.has(order.key);
             return (
               <li className={`order-card order-card--${order.state}`} key={order.key}>
-                <div className="order-card-header order-card-header--admin">
-                  <button
-                    type="button"
-                    className="order-card-toggle"
-                    aria-expanded={isOpen}
-                    onClick={() => toggleExpanded(order.key)}
-                  >
-                    <div className="order-card-date">
-                      <span className="order-card-label">
-                        {order.channel === 'caja' ? order.customerLabel : order.user}
-                        {order.channel === 'caja' && <span className="order-card-channel-tag">Caja</span>}
-                        {order.isGuest && <span className="order-card-channel-tag">Invitado</span>}
-                      </span>
-                      <span>
-                        {formatDateTime(order.date)}
-                        {order.channel === 'caja' && order.paymentMethod && ` · ${PAYMENT_LABEL[order.paymentMethod]}`}
-                        {order.isGuest && order.guestPhone && ` · ${order.guestPhone}`}
-                        {order.deliveryMethod === 'envio' && ` · Envío`}
-                      </span>
-                    </div>
-                    <span className="order-card-total">${order.total}</span>
+                <button
+                  type="button"
+                  className="order-card-toggle"
+                  aria-expanded={isOpen}
+                  onClick={() => toggleExpanded(order.key)}
+                >
+                  <div className="order-card-row order-card-row--name">
+                    <span className="order-card-label">
+                      {order.channel === 'caja' ? order.customerLabel : order.user}
+                    </span>
+                    {order.channel === 'caja' && <span className="order-card-channel-tag">Caja</span>}
+                    {order.isGuest && <span className="order-card-channel-tag">Invitado</span>}
                     <DownOutlined className="order-card-chevron" />
-                  </button>
-
-                  <div className="order-status-toggle" role="group" aria-label="Estado del pedido">
-                    {STATUSES.map((s) => (
-                      <button
-                        type="button"
-                        key={s}
-                        className={`order-status-option${order.state === s ? ' is-active' : ''}`}
-                        onClick={() => handleOrderStatus(order.key, s)}
-                      >
-                        {STATUS_LABEL[s]}
-                      </button>
-                    ))}
                   </div>
+                  <div className="order-card-row order-card-row--date">
+                    <span className="order-card-datetime">{formatDateTime(order.date)}</span>
+                  </div>
+                </button>
 
-                  <button
-                    type="button"
-                    className="order-card-download"
-                    aria-label={`Descargar ticket del pedido de ${order.channel === 'caja' ? order.customerLabel : order.user}`}
-                    title="Descargar ticket"
-                    onClick={() => downloadTicket(order)}
-                  >
-                    <DownloadOutlined />
-                  </button>
+                <div className="order-card-row order-card-row--actions">
+                  <span className="order-card-total">${order.total}</span>
+
+                  <div className="order-card-actions">
+                    <button
+                      type="button"
+                      className="order-card-download"
+                      aria-label={`Descargar ticket del pedido de ${order.channel === 'caja' ? order.customerLabel : order.user}`}
+                      title="Descargar ticket"
+                      onClick={() => downloadTicket(order)}
+                    >
+                      <DownloadOutlined />
+                    </button>
+
+                    <div className="order-status-toggle" role="group" aria-label="Estado del pedido">
+                      {STATUSES.map((s) => (
+                        <button
+                          type="button"
+                          key={s}
+                          className={`order-status-option${order.state === s ? ' is-active' : ''}`}
+                          onClick={() => handleOrderStatus(order.key, s)}
+                        >
+                          {STATUS_LABEL[s]}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
                 </div>
 
                 <div className={`order-card-body-wrap${isOpen ? ' is-open' : ''}`}>
                   <div className="order-card-body-inner">
+                    {order.channel === 'caja' && order.paymentMethod && (
+                      <p className="order-delivery-info">Pago: {PAYMENT_LABEL[order.paymentMethod]}</p>
+                    )}
+                    {order.isGuest && order.guestPhone && (
+                      <p className="order-delivery-info">Teléfono: {order.guestPhone}</p>
+                    )}
                     {order.deliveryMethod === 'envio' && (
                       <p className="order-delivery-info">Envío a: {order.deliveryAddress}</p>
                     )}
@@ -259,22 +265,24 @@ export const OrderList = () => {
           })}
           {emptySlots.map((_, i) => (
             <li className="order-card order-card-placeholder" key={`empty-${i}`} aria-hidden="true">
-              <div className="order-card-header order-card-header--admin">
-                <div className="order-card-toggle">
-                  <div className="order-card-date">
-                    <span className="order-card-label">&nbsp;</span>
-                    <span>&nbsp;</span>
+              <div className="order-card-toggle">
+                <div className="order-card-row order-card-row--name">
+                  <span className="order-card-label">&nbsp;</span>
+                </div>
+                <div className="order-card-row order-card-row--date">&nbsp;</div>
+              </div>
+              <div className="order-card-row order-card-row--actions">
+                <span className="order-card-total">&nbsp;</span>
+                <div className="order-card-actions">
+                  <button type="button" className="order-card-download" tabIndex={-1}><DownloadOutlined /></button>
+                  <div className="order-status-toggle" role="group">
+                    {STATUSES.map((s) => (
+                      <button type="button" key={s} className="order-status-option" tabIndex={-1}>
+                        {STATUS_LABEL[s]}
+                      </button>
+                    ))}
                   </div>
-                  <span className="order-card-total">&nbsp;</span>
                 </div>
-                <div className="order-status-toggle" role="group">
-                  {STATUSES.map((s) => (
-                    <button type="button" key={s} className="order-status-option" tabIndex={-1}>
-                      {STATUS_LABEL[s]}
-                    </button>
-                  ))}
-                </div>
-                <button type="button" className="order-card-download" tabIndex={-1}><DownloadOutlined /></button>
               </div>
             </li>
           ))}

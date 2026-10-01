@@ -1,9 +1,5 @@
 @import '../../Context/Themes.scss';
 
-.guestBtn {
-    margin-top: 0.8rem;
-}
-
 .loginPage {
     position: relative;
     min-height: 100vh;
@@ -11,11 +7,9 @@
     background-color: var(--color1);
     overflow: hidden;
     display: flex;
-    align-items: center;
-    justify-content: flex-end;
-    padding: 4vw 8vw;
+    align-items: stretch;
 
-    // the raking light: one hard diagonal plane crossing the frame
+    // the raking light: one hard diagonal plane crossing the whole frame
     &::before {
         content: '';
         position: absolute;
@@ -40,15 +34,33 @@
     }
 }
 
-.wordmark {
-    position: absolute;
-    top: 8vh;
-    left: 6vw;
+.loginBrand {
+    position: relative;
     z-index: 1;
+    flex: 1 1 55%;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding: 6vh 4vw;
+}
+
+.loginBrand-mark {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+
+    svg {
+        flex-shrink: 0;
+        filter: drop-shadow(3px 3px 0 var(--color1));
+    }
+}
+
+.wordmark {
     margin: 0;
     font-family: var(--font-display);
     font-weight: 700;
-    font-size: clamp(2.5rem, 6vw, 5rem);
+    font-size: clamp(2.2rem, 5vw, 4rem);
     line-height: 0.95;
     color: var(--color5);
     text-shadow: 4px 4px 0 var(--color1);
@@ -56,60 +68,171 @@
 }
 
 .wordmarkSub {
-    position: absolute;
-    top: calc(8vh + clamp(2.5rem, 6vw, 5rem) + 0.5rem);
-    left: 6vw;
-    z-index: 1;
+    margin: 0.3rem 0 0;
     color: var(--color5);
     font-family: var(--font-body);
     font-weight: 500;
     letter-spacing: 0.18em;
     text-transform: uppercase;
-    font-size: 0.85rem;
+    font-size: 0.8rem;
     opacity: 0.85;
 }
 
-.formContainer {
+// nameplate detail at the foot of the brand plane — reads like a plant ID plate,
+// not fabricated metrics, so it stays true even with a demo dataset behind it
+.loginBrand-plate {
+    display: flex;
+    gap: clamp(1.5rem, 4vw, 3rem);
+    margin: 0;
+    padding-top: 1.5rem;
+    border-top: 2px solid rgba(244, 241, 234, 0.35);
+
+    dt {
+        font-size: 0.7rem;
+        font-weight: 600;
+        letter-spacing: 0.14em;
+        text-transform: uppercase;
+        color: rgba(244, 241, 234, 0.65);
+        margin-bottom: 0.25rem;
+    }
+
+    dd {
+        margin: 0;
+        font-weight: 600;
+        color: var(--color5);
+        font-size: 0.95rem;
+    }
+}
+
+.loginFormZone {
     position: relative;
     z-index: 2;
+    flex: 0 1 500px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 6vh 4vw;
+}
+
+.loginCard {
     width: 100%;
-    max-width: 380px;
+    max-width: 440px;
+    background-color: var(--color5);
+    padding: 2.75rem 3rem;
+    box-shadow: var(--shadow-hard);
+    border: 2px solid var(--color1);
+}
 
-    .formBlock {
-        background-color: var(--color5);
-        padding: 2.5rem;
-        box-shadow: var(--shadow-hard);
-        border: 2px solid var(--color1);
+.loginCard-tag {
+    display: inline-block;
+    font-size: 0.7rem;
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--color2);
+    margin-bottom: 0.6rem;
+}
 
-        .ant-form-item-label > label {
+.loginCard-title {
+    margin: 0 0 1.5rem;
+    font-size: 1.6rem;
+}
+
+.loginForm {
+    .ant-form-item {
+        margin-bottom: 1.1rem;
+    }
+
+    .ant-form-item-label {
+        padding-bottom: 0.25rem;
+
+        > label {
             font-family: var(--font-body);
-            font-weight: 600;
-            color: var(--grey1);
+            font-size: 0.75rem;
+            font-weight: 700;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            color: var(--grey2);
+            height: auto;
         }
+    }
 
-        input, .ant-input, .ant-input-affix-wrapper {
-            border: 2px solid var(--color1);
-            border-radius: 0;
-            background-color: white;
-        }
-        .ant-input-affix-wrapper > input.ant-input {
-            border: none;
-        }
+    .ant-input-affix-wrapper {
+        padding: 0.5rem 0.75rem;
 
-        a {
-            color: var(--color2);
-            font-weight: 600;
-            text-decoration: underline;
+        .anticon {
+            color: var(--grey3);
         }
     }
 }
 
-@media screen and (max-width: 700px) {
-    .loginPage {
-        justify-content: center;
-        padding: 4vw;
+.loginForm-submit {
+    margin-top: 1.5rem;
+    margin-bottom: 0 !important;
+}
+
+.loginCard-divider {
+    display: flex;
+    align-items: center;
+    margin: 1.25rem 0;
+    color: var(--grey3);
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+
+    &::before, &::after {
+        content: '';
+        flex: 1;
+        height: 2px;
+        background-color: var(--grey4);
     }
-    .wordmark, .wordmarkSub {
-        left: 5vw;
+
+    span {
+        padding: 0 0.75rem;
+    }
+}
+
+.loginCard-footer {
+    margin: 1.5rem 0 0;
+    text-align: center;
+    font-size: 0.9rem;
+    color: var(--grey2);
+
+    a {
+        color: var(--color2);
+        font-weight: 600;
+        text-decoration: underline;
+        cursor: pointer;
+    }
+}
+
+@media screen and (max-width: 860px) {
+    .loginPage {
+        flex-direction: column;
+    }
+
+    .loginBrand {
+        flex: 0 0 auto;
+        padding: 5vh 6vw 3rem;
+    }
+
+    .loginBrand-plate {
+        display: none;
+    }
+
+    .loginFormZone {
+        flex: 1 1 auto;
+        padding: 0 6vw 6vh;
+    }
+
+    .loginCard {
+        max-width: 480px;
+        padding: 2.5rem;
+    }
+}
+
+@media screen and (max-width: 420px) {
+    .loginCard {
+        padding: 1.75rem;
     }
 }
