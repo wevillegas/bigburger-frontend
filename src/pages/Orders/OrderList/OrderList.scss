@@ -1,4 +1,4 @@
-@import '../../../Context/Themes.scss';
+@import '../../../styles/themes.scss';
 
 .orders-page {
     max-width: 900px;
@@ -310,6 +310,16 @@
     color: var(--color1);
 }
 
+.order-status--cancelado {
+    background-color: var(--grey4);
+    color: var(--grey2);
+    border-color: var(--grey3);
+}
+
+.order-card--cancelado {
+    opacity: 0.7;
+}
+
 .order-status-toggle {
     display: inline-flex;
     border: 2px solid var(--color1);
@@ -423,6 +433,28 @@
     &:hover {
         transform: translate(-1px, -1px);
         box-shadow: var(--shadow-hard-sm) !important;
+    }
+}
+
+.order-cancel-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    margin: 0.8rem 1.1rem 1rem;
+    font-family: var(--font-body);
+    font-weight: 700;
+    font-size: 0.82rem;
+    padding: 0.5rem 0.9rem;
+    background-color: var(--color5) !important;
+    color: var(--color2) !important;
+    border: 2px solid var(--color2) !important;
+    border-radius: var(--radius) !important;
+    cursor: pointer;
+    box-shadow: none !important;
+
+    &:hover {
+        background-color: var(--color2) !important;
+        color: var(--color5) !important;
     }
 }
 

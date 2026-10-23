@@ -1,13 +1,13 @@
+import { API_URL } from '../../../config/env'
+import { readJSON } from '../../../utils/storage'
 import { CloseOutlined } from '@ant-design/icons'
-import { Card, Col, InputNumber, Modal, notification, Row } from 'antd'
+import { Card, Col, Modal, notification, Row } from 'antd'
 import axios from 'axios'
 import React, { useEffect, useState } from 'react'
 import { PRODUCT_CATEGORIES } from '../../../constants/categories'
 import { Pagination } from '../../../shared/Pagination/Pagination'
 import './ProductHome.scss'
-// import { URL } from '../../../constants/endpoints'
 
-const URL = process.env.REACT_APP_API_URL;
 
 const CATEGORIES = ["Todas", ...PRODUCT_CATEGORIES]
 const PAGE_SIZE = 8
@@ -26,7 +26,7 @@ export const ProductHome = ({ bCount }) => {
     // CARGAR PRODUCTOS
     const loadProducts = async () => {
         try {
-            const response = await axios.get(`${URL}/products`);
+            const response = await axios.get(`${API_URL}/products`);
             const productsDB = response.data.products
 
             productsState(productsDB);
@@ -44,8 +44,8 @@ export const ProductHome = ({ bCount }) => {
 
     //Agregar al carrito
     const addToCart = (id) => {
-        const productSelected = products.find(el => el._id == id)
-        const inCart = JSON.parse(localStorage.getItem('inCart')) || []
+        const productSelected = products.find(el => el._id === id)
+        const inCart = readJSON('inCart') || []
         const itemInCart = inCart.find(item => item._id === productSelected._id)
         let newCart = [];
         itemInCart ?

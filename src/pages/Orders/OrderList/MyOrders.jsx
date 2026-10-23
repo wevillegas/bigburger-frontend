@@ -1,4 +1,5 @@
-import { CheckCircleOutlined, ClockCircleOutlined, DownOutlined, RedoOutlined, ShoppingOutlined } from '@ant-design/icons';
+import { API_URL } from '../../../config/env'
+import { CheckCircleOutlined, ClockCircleOutlined, CloseCircleOutlined, CloseOutlined, DownOutlined, RedoOutlined, ShoppingOutlined } from '@ant-design/icons';
 import { Typography } from 'antd';
 import axios from 'axios';
 import React, { useEffect, useState } from 'react'
@@ -6,15 +7,16 @@ import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../../../auth/useAuth';
 import { Pagination } from '../../../shared/Pagination/Pagination';
 import { formatDateTime } from '../../../utils/date';
+import { canCancel, confirmCancel, CANCEL_WINDOW_MINUTES } from '../../../utils/cancelOrder';
 import './OrderList.scss'
 
-const URL = process.env.REACT_APP_API_URL;
 
-const STATUS_LABEL = { pendiente: 'Pendiente', realizado: 'Realizado' };
+const STATUS_LABEL = { pendiente: 'Pendiente', realizado: 'Realizado', cancelado: 'Cancelado' };
 const FILTERS = [
   { key: 'todas', label: 'Todas' },
   { key: 'pendiente', label: 'Pendientes' },
   { key: 'realizado', label: 'Realizados' },
+  { key: 'cancelado', label: 'Cancelados' },
 ];
 const PAGE_SIZE = 6
 
@@ -28,14 +30,12 @@ export const MyOrders = ({ bCount }) => {
 
   const getOrders = async () => {
     try {
-      const dataFromDB = await axios.get(`${URL}/orders`, {
-        headers: { authorization: auth.token },
-      })
+      const dataFromDB = await axios.get(`${API_URL}/orders`)
       const ordersDB = dataFromDB.data.ticket;
       // los pedidos cargados por un admin desde caja no son "sus" pedidos personales
-      const orderFilter = ordersDB.filter(el => el.user._id == auth.user._id && el.channel !== 'caja')
+      const orderFilter = ordersDB.filter(el => el.user._id === auth.user._id && el.channel !== 'caja')
       const orderToRender = orderFilter.map(el => ({
-        date: el.cretatedAt,
+        date: el.createdAt,
         key: el._id,
         user: el.user.fullName,
         menu: el.menu,
@@ -145,7 +145,7 @@ export const MyOrders = ({ bCount }) => {
                 </div>
 
                 <span className={`order-status order-status--${order.state}`}>
-                  {order.state === 'realizado' ? <CheckCircleOutlined /> : <ClockCircleOutlined />}
+                  {order.state === 'realizado' ? <CheckCircleOutlined /> : order.state === 'cancelado' ? <CloseCircleOutlined /> : <ClockCircleOutlined />}
                   {STATUS_LABEL[order.state] || order.state}
                 </span>
 
@@ -181,6 +181,11 @@ export const MyOrders = ({ bCount }) => {
                   <button type="button" className="order-reorder-btn" onClick={() => reorder(order)}>
                     <RedoOutlined /> Pedir de nuevo
                   </button>
+                  {canCancel(order.state, order.date) && (
+                    <button type="button" className="order-cancel-btn" onClick={() => confirmCancel(`${API_URL}/order/${order.key}/cancel`, getOrders)}>
+                      <CloseOutlined /> Cancelar pedido (hasta {CANCEL_WINDOW_MINUTES} min)
+                    </button>
+                  )}
                 </div>
               </div>
             </li>

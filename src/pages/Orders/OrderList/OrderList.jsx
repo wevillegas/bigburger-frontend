@@ -1,22 +1,23 @@
-import { DownloadOutlined, DownOutlined } from '@ant-design/icons';
+import { API_URL } from '../../../config/env'
+import { confirmCancel } from '../../../utils/cancelOrder';
+import { CloseOutlined, DownloadOutlined, DownOutlined } from '@ant-design/icons';
 import { Typography } from 'antd';
 import axios from 'axios';
 import React, { useEffect, useState } from 'react'
-import { useAuth } from '../../../auth/useAuth';
 import { Pagination } from '../../../shared/Pagination/Pagination';
 import { downloadTicket } from '../../../utils/ticket';
 import { formatDateTime } from '../../../utils/date';
 import './OrderList.scss'
 
-const URL = process.env.REACT_APP_API_URL;
 
 const STATUSES = ['pendiente', 'realizado'];
-const STATUS_LABEL = { pendiente: 'Pendiente', realizado: 'Realizado' };
+const STATUS_LABEL = { pendiente: 'Pendiente', realizado: 'Realizado', cancelado: 'Cancelado' };
 const PAYMENT_LABEL = { efectivo: 'Efectivo', transferencia: 'Transferencia', tarjeta: 'Tarjeta' };
 const FILTERS = [
   { key: 'todas', label: 'Todas' },
   { key: 'pendiente', label: 'Pendientes' },
   { key: 'realizado', label: 'Realizados' },
+  { key: 'cancelado', label: 'Cancelados' },
 ];
 const CHANNEL_FILTERS = [
   { key: 'todos', label: 'Todos' },
@@ -33,17 +34,14 @@ export const OrderList = () => {
   const [channelFilter, setChannelFilter] = useState('todos')
   const [search, setSearch] = useState('')
   const [page, setPage] = useState(1)
-  const auth = useAuth()
 
   const getOrders = async () => {
     try {
-      const dataFromDB = await axios.get(`${URL}/orders`, {
-        headers: { authorization: auth.token },
-      })
+      const dataFromDB = await axios.get(`${API_URL}/orders`)
       const ordersDB = dataFromDB.data.ticket;
       const orderToRender = ordersDB.map(el => ({
         key: el._id,
-        date: el.cretatedAt,
+        date: el.createdAt,
         user: el.user.fullName,
         isGuest: !!el.user.guest,
         guestPhone: el.guestContact?.phone,
@@ -69,9 +67,7 @@ export const OrderList = () => {
     const previous = orders;
     updOrders(prev => prev.map(o => o.key === id ? { ...o, state } : o));
     try {
-      await axios.put(`${URL}/order/${id}`, { state }, {
-        headers: { authorization: auth.token }
-      })
+      await axios.put(`${API_URL}/order/${id}`, { state })
     } catch {
       updOrders(previous);
     }
@@ -210,6 +206,21 @@ export const OrderList = () => {
                       <DownloadOutlined />
                     </button>
 
+                    {order.state === 'pendiente' && (
+                      <button
+                        type="button"
+                        className="order-card-download"
+                        aria-label="Cancelar pedido"
+                        title="Cancelar pedido"
+                        onClick={() => confirmCancel(`${API_URL}/order/${order.key}/cancel`, getOrders)}
+                      >
+                        <CloseOutlined />
+                      </button>
+                    )}
+
+                    {order.state === 'cancelado' ? (
+                      <span className="order-status order-status--cancelado">Cancelado</span>
+                    ) : (
                     <div className="order-status-toggle" role="group" aria-label="Estado del pedido">
                       {STATUSES.map((s) => (
                         <button
@@ -222,6 +233,7 @@ export const OrderList = () => {
                         </button>
                       ))}
                     </div>
+                    )}
                   </div>
                 </div>
 

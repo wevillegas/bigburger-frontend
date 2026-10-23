@@ -8,17 +8,17 @@ Repo hermano: [bigburger-backend](https://github.com/wevillegas/bigburger-backen
 
 ## Stack
 
-- React 18 (Create React App) + React Router v6
+- React 18 (Vite) + React Router v6
 - Ant Design (antd) como librería de componentes
 - Sass para estilos
 - axios para la capa HTTP
-- Tests: Jest + React Testing Library (vía `react-scripts test`)
+- Tests: Vitest + React Testing Library
 
 ## Setup local
 
 ```bash
 npm install
-cp .env.example .env.local   # apuntar REACT_APP_API_URL al backend
+cp .env.example .env.local   # apuntar REACT_APP_API_URL al backend (el nombre se mantiene por compatibilidad con Vite: envPrefix)
 npm run dev                    # http://localhost:3000
 ```
 
@@ -54,3 +54,20 @@ _Pendiente: agregar screenshots del catálogo, carrito y panel admin antes de co
 - **Carrito en `localStorage`, reconciliado contra el catálogo al entrar**: el carrito sobrevive a un refresh sin pedir login, pero si un producto cambió de precio o se quedó sin stock desde que se agregó, se sincroniza (y avisa al usuario) al abrir `Cart`; el backend igual revalida todo al confirmar.
 - **`AuthProvider` + contexto único para user/token**: evita pasar props de autenticación por toda la jerarquía; `useAuth()` es el único punto de acceso, y un interceptor de axios desloguea automáticamente ante un 401/403 del backend.
 - **Checkout sin cuenta como primera clase, no como excepción**: `Cart` arma un payload distinto (nombre/teléfono vs. token) según haya o no sesión, en vez de forzar registro para comprar.
+
+## Estructura
+
+```
+src/
+  assets/img/     imágenes importadas desde componentes (logo)
+  auth/           AuthProvider y useAuth (sesión)
+  config/         env.js: única lectura de la URL de la API
+  constants/      categorías
+  pages/          una carpeta por pantalla (con su .scss y sus tests)
+  routes/         guards de React Router (Admin, Customer, Auth, PublicOrCustomer)
+  shared/         componentes reutilizables (Header, Sidebar, Footer, Pagination, Background)
+  styles/         themes.scss: tokens de color y tipografía
+  utils/          funciones puras (fechas, tickets, localStorage)
+public/           favicon, íconos del manifest, _headers
+docs/brand/       logo original en alta resolución
+```

@@ -1,3 +1,5 @@
+import { API_URL } from '../../config/env'
+import { readJSON } from '../../utils/storage'
 import { Drawer, Layout } from "antd";
 
 
@@ -5,10 +7,10 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 
 import { Route, Routes } from "react-router-dom";
-import { AdminRoute } from "../../routers/AdminRoute";
-import { CustomerRoute } from "../../routers/CustomerRoute";
-import { PublicOrCustomerRoute } from "../../routers/PublicOrCustomerRoute";
-import { AuthRoute } from "../../routers/AuthRoute";
+import { AdminRoute } from "../../routes/AdminRoute";
+import { CustomerRoute } from "../../routes/CustomerRoute";
+import { PublicOrCustomerRoute } from "../../routes/PublicOrCustomerRoute";
+import { AuthRoute } from "../../routes/AuthRoute";
 import { Footer } from "../../shared/Footer/Footer";
 import { Header } from "../../shared/Header/Header";
 import { Sidebar } from "../../shared/Sidebar/Sidebar";
@@ -20,6 +22,7 @@ import { ProductHome } from "../Products/ProductsList/ProductHome";
 import { User } from "../Users/user";
 import { useAuth } from "../../auth/useAuth";
 
+import { TrackOrder } from "../Orders/OrderList/TrackOrder";
 import { MyOrders } from "../Orders/OrderList/MyOrders";
 import { CashOrder } from "../Orders/CashOrder/CashOrder";
 import { Profile } from "../Profile/Profile";
@@ -27,11 +30,10 @@ import { Dashboard } from "../Dashboard/Dashboard";
 import "./Home.scss";
 import { Error } from "../Error/Error";
 
-const URL = process.env.REACT_APP_API_URL;
 const { Content, Sider } = Layout;
 export const Home = () => {
   const auth = useAuth();
-  const initialCart = JSON.parse(localStorage.getItem('inCart'))
+  const initialCart = readJSON('inCart')
   const [productsQty, setProductQty] = useState(0);
   const [menuOpen, setMenuOpen] = useState(false);
   const [pendingOrders, setPendingOrders] = useState(0);
@@ -43,19 +45,20 @@ export const Home = () => {
     );
     setProductQty(burgerCount);
   };
+  // solo al montar: toma el carrito guardado una vez
   useEffect(()=>{
-    bCount(initialCart)},[]
+    bCount(initialCart)},
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    []
   )
 
   // marca en el sidebar si el usuario tiene un pedido en curso, sin esperar a que refresque la página
   useEffect(() => {
-    if (!auth.user || !auth.token) return;
+    if (!auth.user) return;
 
     const loadPendingOrders = async () => {
       try {
-        const { data } = await axios.get(`${URL}/orders`, {
-          headers: { authorization: auth.token },
-        });
+        const { data } = await axios.get(`${API_URL}/orders`);
         const ownPending = data.ticket.filter(
           (o) => o.user._id === auth.user._id && o.state === "pendiente"
         );
@@ -68,7 +71,7 @@ export const Home = () => {
     loadPendingOrders();
     const interval = setInterval(loadPendingOrders, 15000);
     return () => clearInterval(interval);
-  }, [auth.user, auth.token])
+  }, [auth.user])
   return (
     <>
       <DriftingBackground />
@@ -114,6 +117,14 @@ export const Home = () => {
                   element={
                     <PublicOrCustomerRoute>
                       <Cart bCount={(b)=>bCount(b)} />
+                    </PublicOrCustomerRoute>
+                  }
+                />
+                <Route
+                  path="/seguimiento"
+                  element={
+                    <PublicOrCustomerRoute>
+                      <TrackOrder />
                     </PublicOrCustomerRoute>
                   }
                 />

@@ -1,4 +1,6 @@
-import { Button, Form, Input, Modal } from "antd";
+import { API_URL } from '../../config/env'
+import logo from '../../assets/img/logo.png'
+import { Button, Form, Input, Modal, message } from "antd";
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import "./Login.scss"
@@ -6,7 +8,6 @@ import axios from "axios";
 import { useAuth } from "../../auth/useAuth";
 import { CheckCircleOutlined, LockOutlined, MailOutlined, UserOutlined } from "@ant-design/icons";
 
-const URL = process.env.REACT_APP_API_URL;
 
 export const Login = () => {
 
@@ -31,7 +32,7 @@ export const Login = () => {
   };
   const registerUser = async (formData)=>{
     try{
-      const { data } =await axios.post(`${URL}/user`, formData)
+      const { data } =await axios.post(`${API_URL}/user`, formData)
       console.log("data ususario", data.usuarioNuevo)
       Modal.info({
         title: 'Cuenta creada',
@@ -44,7 +45,7 @@ export const Login = () => {
     setIsModalVisible(false);
     onLogin(formData)
     }catch(err){
-      console.log(err);
+      message.error(err.response?.data?.message || 'No pudimos crear la cuenta. Intentá de nuevo')
     }
   }
 
@@ -52,10 +53,7 @@ export const Login = () => {
     <div className="loginPage">
       <div className="loginBrand">
         <div className="loginBrand-mark">
-          <svg width="40" height="40" viewBox="0 0 26 26" aria-hidden="true" focusable="false">
-            <polygon points="0,26 13,0 13,26" fill="var(--color3)" />
-            <polygon points="13,26 13,0 26,26" fill="var(--color5)" />
-          </svg>
+          <img className="loginBrand-logo" src={logo} alt="" width="72" height="72" />
           <div>
             <h1 className="wordmark">BIGBURGER</h1>
             <p className="wordmarkSub">Planta de pedidos N.º 01</p>
@@ -93,7 +91,7 @@ export const Login = () => {
               name="email"
               rules={[{ required: validationOn, message: "Ingresá tu email" }]}
             >
-              <Input maxLength={30} placeholder="big@burger.com" prefix={<MailOutlined />} />
+              <Input maxLength={40} placeholder="big@burger.com" prefix={<MailOutlined />} />
             </Form.Item>
 
             <Form.Item
@@ -101,7 +99,7 @@ export const Login = () => {
               name="password"
               rules={[{ required: validationOn, message: "Ingresá tu contraseña" }]}
             >
-              <Input.Password maxLength={30} prefix={<LockOutlined />} />
+              <Input.Password maxLength={72} prefix={<LockOutlined />} />
             </Form.Item>
 
             <Form.Item className="loginForm-submit">
@@ -120,7 +118,7 @@ export const Login = () => {
           </Button>
 
           <p className="loginCard-footer">
-            ¿No tenés cuenta todavía? <a onClick={showModal}>Creá una</a>
+            ¿No tenés cuenta todavía? <a href="#registro" onClick={(e) => { e.preventDefault(); showModal() }}>Creá una</a>
           </p>
         </div>
       </div>
@@ -146,7 +144,7 @@ export const Login = () => {
             name="fullName"
             rules={[{ required: validationOn, message: "Ingresá un nombre válido" }]}
           >
-            <Input maxLength={30} prefix={<UserOutlined />} />
+            <Input maxLength={40} prefix={<UserOutlined />} />
           </Form.Item>
           <Form.Item
             label="Email"
@@ -156,7 +154,7 @@ export const Login = () => {
               { type: 'email', message: 'Ingresá un email válido' },
             ]}
           >
-            <Input maxLength={30} prefix={<MailOutlined />} />
+            <Input maxLength={40} prefix={<MailOutlined />} />
           </Form.Item>
 
           <Form.Item
@@ -168,7 +166,7 @@ export const Login = () => {
             ]}
             hasFeedback
           >
-            <Input.Password maxLength={30} prefix={<LockOutlined />} />
+            <Input.Password maxLength={72} prefix={<LockOutlined />} />
           </Form.Item>
 
           <Form.Item

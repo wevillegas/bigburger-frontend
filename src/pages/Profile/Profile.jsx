@@ -1,10 +1,10 @@
+import { API_URL } from '../../config/env'
 import { Modal, Typography } from 'antd';
 import axios from 'axios';
 import React, { useState } from 'react';
 import { useAuth } from '../../auth/useAuth';
 import './Profile.scss';
 
-const URL = process.env.REACT_APP_API_URL;
 const ROLE_LABEL = { ADMINISTRADOR: 'Administrador', USUARIO: 'Usuario' };
 
 export const Profile = () => {
@@ -25,9 +25,8 @@ export const Profile = () => {
     setSaving(true);
     try {
       const { data } = await axios.put(
-        `${URL}/user/me`,
-        { fullName: fullName.trim(), phone: phone.trim(), address: address.trim() },
-        { headers: { authorization: auth.token } }
+        `${API_URL}/user/me`,
+        { fullName: fullName.trim(), phone: phone.trim(), address: address.trim() }
       );
       auth.updateUser({ fullName: data.fullName, phone: data.phone, address: data.address });
       Modal.success({ title: 'Perfil actualizado', content: 'Tus datos se guardaron correctamente' });
@@ -54,9 +53,8 @@ export const Profile = () => {
     setChangingPassword(true);
     try {
       await axios.put(
-        `${URL}/user/me/password`,
-        { currentPassword, newPassword },
-        { headers: { authorization: auth.token } }
+        `${API_URL}/user/me/password`,
+        { currentPassword, newPassword }
       );
       setCurrentPassword('');
       setNewPassword('');

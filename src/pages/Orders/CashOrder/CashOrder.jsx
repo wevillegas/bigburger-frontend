@@ -1,3 +1,4 @@
+import { API_URL } from '../../../config/env'
 import { DeleteOutlined, MinusOutlined, PlusOutlined, PrinterOutlined } from '@ant-design/icons';
 import { Modal, Typography } from 'antd';
 import axios from 'axios';
@@ -7,7 +8,6 @@ import { PRODUCT_CATEGORIES } from '../../../constants/categories';
 import { formatDateTime } from '../../../utils/date';
 import './CashOrder.scss';
 
-const URL = process.env.REACT_APP_API_URL;
 const CATEGORIES = ['Todas', ...PRODUCT_CATEGORIES];
 const PAYMENT_METHODS = [
   { key: 'efectivo', label: 'Efectivo' },
@@ -33,7 +33,7 @@ export const CashOrder = () => {
   useEffect(() => {
     const loadProducts = async () => {
       try {
-        const { data } = await axios.get(`${URL}/products`);
+        const { data } = await axios.get(`${API_URL}/products`);
         setProducts(data.products.filter((p) => p.stock));
       } catch {
         Modal.error({ title: 'Error', content: 'No se pudieron cargar los productos' });
@@ -46,7 +46,7 @@ export const CashOrder = () => {
   useEffect(() => {
     const loadCustomers = async () => {
       try {
-        const { data } = await axios.get(`${URL}/users`, { headers: { authorization: auth.token } });
+        const { data } = await axios.get(`${API_URL}/users`);
         setCustomers(data.users.filter((u) => u.role === 'USUARIO'));
       } catch {
         // si falla, el pedido igual se puede cargar sin vincular cuenta
@@ -108,15 +108,14 @@ export const CashOrder = () => {
     setSubmitting(true);
     try {
       const { data } = await axios.post(
-        `${URL}/order`,
+        `${API_URL}/order`,
         {
           channel: 'caja',
           customerLabel: customerLabel.trim(),
           paymentMethod,
           menu: items,
           linkedCustomerId: linkedCustomer?._id,
-        },
-        { headers: { authorization: auth.token } }
+        }
       );
       setLastOrder(data.newOrder);
       setItems([]);
@@ -160,7 +159,7 @@ export const CashOrder = () => {
           </div>
           <div className="cash-ticket-meta">
             <span>Pedido #{lastOrder._id.slice(-6).toUpperCase()}</span>
-            <span>{formatDateTime(lastOrder.cretatedAt)}</span>
+            <span>{formatDateTime(lastOrder.createdAt)}</span>
             <span>Para: {lastOrder.customerLabel}</span>
             <span>Atendido por: {auth.user.fullName}</span>
             {lastOrder.linkedCustomer && <span>Cliente: {lastOrder.linkedCustomer.fullName} (suma puntos)</span>}

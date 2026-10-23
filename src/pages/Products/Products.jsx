@@ -1,23 +1,20 @@
+import { API_URL } from '../../config/env'
 import React, { useEffect, useState } from 'react'
 import axios from "axios"
 import { ProductsAdd } from "./ProductsAdd/ProductsAdd"
-import {  Button, Checkbox, Form, Input, Modal, Select, Typography } from 'antd'
+import {  Button, Form, Input, InputNumber, Modal, Typography } from 'antd'
 import { ProductList } from './ProductsList/ProductList'
 import { CheckCircleOutlined, CloseOutlined, PlusOutlined, WarningOutlined } from '@ant-design/icons'
 import TextArea from 'antd/lib/input/TextArea'
 import "./Products.scss"
-import { useAuth } from '../../auth/useAuth'
 import { PRODUCT_CATEGORIES } from '../../constants/categories'
 import { Pagination } from '../../shared/Pagination/Pagination'
 // const URL = 'http://localhost:3100/api'
-const { Option } = Select;
 
-const URL = process.env.REACT_APP_API_URL;
 const CATEGORY_FILTERS = ["Todas", ...PRODUCT_CATEGORIES, "Sin stock"]
 const PAGE_SIZE = 8
 
 export const Products = () => {
-    const auth= useAuth()
     const [products, productsState] = useState([])
     const [totalProducts, totalProductsUpdate] = useState(0)
     const [addOpen, setAddOpen] = useState(false)
@@ -67,14 +64,7 @@ export const Products = () => {
 
         try {
             // console.log(id)
-            const deletedProduct = await axios.delete(`${URL}/product/`, {
-                params: {
-                    product_id_delete: id
-                },
-                headers: {
-                    authorization:auth.token
-                }
-            });
+            await axios.delete(`${API_URL}/product/${id}`);
             const newArrayDelete = products.filter(prod => prod._id !== id)
             productsState(newArrayDelete)
 
@@ -110,7 +100,7 @@ export const Products = () => {
     // CARGAR PRODUCTOS
     const loadProductsNoModal = async () => {
         try {
-            const response = await axios.get(`${URL}/products`);
+            const response = await axios.get(`${API_URL}/products`);
             const productsDB = response.data.products
             const total = response.data.total
             productsState(productsDB);
@@ -224,14 +214,7 @@ export const Products = () => {
                     // PETICION PUT PARA EDITAR
                     const uploadChanges = async () => {
                         try {
-                            await axios.put(`${URL}/product/upd_id`, productEditing, {
-                                params: {
-                                    updateId: productEditing._id
-                                },
-                                headers: {
-                                    authorization:auth.token
-                                }
-                            })
+                            await axios.put(`${API_URL}/product/${productEditing._id}`, productEditing)
                             Modal.info({
                                 title: 'Producto editado',
                                 icon: <CheckCircleOutlined style={{ color: "#52c41a" }} />,
@@ -305,11 +288,11 @@ export const Products = () => {
                     </Form.Item>
 
                     <Form.Item label="Stock">
-                        <Checkbox checked={productEditing?.stock} onChange={(e) => {
+                        <InputNumber min={0} precision={0} value={productEditing?.stock} onChange={(value) => {
                             setProductEditing((pre) => {
-                                return { ...pre, stock: e.target.checked }
+                                return { ...pre, stock: value ?? 0 }
                             })
-                        }} />
+                        }} addonAfter="u." />
                     </Form.Item>
                 </Form>
             </Modal>

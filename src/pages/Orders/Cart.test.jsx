@@ -4,7 +4,7 @@ import axios from 'axios';
 import { AuthProvider } from '../../auth/AuthProvider';
 import { Cart } from './Cart';
 
-jest.mock('axios');
+vi.mock('axios');
 
 const cartItem = { _id: 'p1', name: 'Doble Bacon', IMG: 'doble.png', price: 100, cantidad: 2, note: '' };
 

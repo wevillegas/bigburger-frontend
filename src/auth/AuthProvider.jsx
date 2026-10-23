@@ -1,15 +1,15 @@
+import { API_URL } from '../config/env'
+import { readJSON } from '../utils/storage'
 import axios from "axios";
+import { message } from "antd";
 import { createContext, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-// import { URL } from "../constants/endpoints";
-const URL = process.env.REACT_APP_API_URL;
 export const AuthContext = createContext();
 
 export const AuthProvider = ({children}) => {
 
 
-    const [user, setUser] = useState(JSON.parse(localStorage.getItem("currentUser")));
-    const [token, setToken] = useState(JSON.parse(localStorage.getItem('userToken'))||[]);
+    const [user, setUser] = useState(readJSON('currentUser'));
 
 
     const navigate = useNavigate();
@@ -18,20 +18,20 @@ export const AuthProvider = ({children}) => {
     async function login(userLogin) {
         try {
             
-            const login = await axios.post(`${URL}/login`, userLogin);
-            localStorage.setItem('userToken', JSON.stringify(login.data.token));
-            setToken(login.data.token)
+            const login = await axios.post(`${API_URL}/login`, userLogin);
+            // la sesión vive en una cookie HttpOnly que setea el backend: el JS nunca ve ni guarda el token
             setUser(login.data.user)
             navigate('/');
         } catch (error) {
-            console.log("Login fallido",error)
+            const data = error.response?.data
+            message.error(data?.msg || data?.message || 'No pudimos iniciar sesión. Revisá tu conexión e intentá de nuevo')
             
 
         }
     }
     const logout = ()=> {
-        console.log('logout')
-        localStorage.removeItem('userToken');
+        // el backend borra la cookie de sesión (el front no puede: es HttpOnly)
+        axios.post(`${API_URL}/logout`).catch(() => {})
         localStorage.removeItem('currentUser');
         localStorage.removeItem('inCart');
         setUser(null);
@@ -39,7 +39,8 @@ export const AuthProvider = ({children}) => {
     }
 
     useEffect(()=> {
-        setUser(JSON.parse(localStorage.getItem("currentUser")));
+        localStorage.removeItem('userToken'); // versiones anteriores guardaban el token acá (expuesto a XSS)
+        setUser(readJSON('currentUser'));
     }, [])
 
     // si el token expiró o es inválido, el backend responde 401/403: cerramos sesión en vez de dejar la UI rota
@@ -47,7 +48,7 @@ export const AuthProvider = ({children}) => {
         const interceptor = axios.interceptors.response.use(
             (response) => response,
             (error) => {
-                if ((error.response?.status === 401 || error.response?.status === 403) && localStorage.getItem('userToken')) {
+                if ((error.response?.status === 401 || error.response?.status === 403) && readJSON('currentUser')) {
                     logout();
                 }
                 return Promise.reject(error);
@@ -71,8 +72,7 @@ export const AuthProvider = ({children}) => {
         user,
         login,
         logout,
-        updateUser,
-        token
+        updateUser
     }
     return <AuthContext.Provider value={auth}>{children}</AuthContext.Provider>
 }

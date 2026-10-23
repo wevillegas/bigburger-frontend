@@ -1,7 +1,7 @@
-import React, { useEffect, useState } from "react";
+import { readJSON } from '../../utils/storage'
+import React from "react";
 import {
   HomeOutlined,
-  LogoutOutlined,
   LoginOutlined,
   ShoppingCartOutlined,
   EditOutlined,
@@ -15,19 +15,25 @@ import {
 
 } from "@ant-design/icons";
 
-import { Badge, Menu, Switch, Tooltip } from "antd";
+import { Badge, Menu, Modal } from "antd";
 import { useAuth } from "../../auth/useAuth";
 import "./Sidebar.scss";
-import { Link, NavLink, Router, useLocation } from "react-router-dom";
+import { NavLink, useLocation } from "react-router-dom";
 
 export const Sidebar = ({productsQty, pendingOrders, onNavigate}) => {
 
   const auth = useAuth();
   const userLogout = () => {
-    auth.logout();
+    Modal.confirm({
+      title: "¿Cerrar sesión?",
+      content: "Vas a tener que volver a ingresar para ver tus pedidos.",
+      okText: "Cerrar sesión",
+      cancelText: "Cancelar",
+      onOk: () => auth.logout(),
+    });
   };
   // sin sesión (invitado), localStorage no tiene "currentUser": nada de esto debe asumir que existe
-  const currentUser = JSON.parse(localStorage.getItem("currentUser") || "null");
+  const currentUser = readJSON('currentUser');
   const adminRole = currentUser?.role === "ADMINISTRADOR";
   const isGuest = !currentUser;
 
@@ -36,6 +42,7 @@ export const Sidebar = ({productsQty, pendingOrders, onNavigate}) => {
     "/": "1",
     "/cart": "2",
     "/myorder": "7",
+    "/seguimiento": "12",
     "/orders": "3",
     "/users": "4",
     "/products": "5",
@@ -67,6 +74,9 @@ export const Sidebar = ({productsQty, pendingOrders, onNavigate}) => {
               Ordenes
             </Badge>
           </NavLink>
+        </Menu.Item>
+        <Menu.Item key="12" icon={<ShoppingOutlined />} hidden={!isGuest}>
+          <NavLink to="/seguimiento">Mi pedido</NavLink>
         </Menu.Item>
         <Menu.Item key="8" icon={<PrinterOutlined />} hidden={!adminRole}>
           <NavLink to="/caja">Pedido en Caja</NavLink>

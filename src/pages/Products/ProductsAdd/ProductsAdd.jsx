@@ -1,28 +1,21 @@
-import React, { useState } from 'react';
-import { Form, Input, Button, Select, InputNumber, Switch, Row, Col, Modal, } from 'antd';
+import { API_URL } from '../../../config/env'
+import React from 'react';
+import { Form, Input, Button, Select, InputNumber, Row, Col, Modal, } from 'antd';
 import axios from 'axios';
 import TextArea from 'antd/lib/input/TextArea';
 import { CloseOutlined } from '@ant-design/icons';
-import { useAuth } from '../../../auth/useAuth'
 import { PRODUCT_CATEGORIES } from '../../../constants/categories'
-// import { URL } from '../../../constants/endpoints'
 const { Option } = Select;
 
-const URL = process.env.REACT_APP_API_URL;
 
 
 
 
 export const ProductsAdd = ({ addProduct }) => {
-    const auth= useAuth()
     const addNewProduct = async (formData) => {
 
         try {
-            const { data } = await axios.post(`${URL}/product`, formData, {
-                headers: {
-                    authorization:auth.token
-                }
-            } );
+            const { data } = await axios.post(`${API_URL}/product`, formData );
             console.log('dataOne', data.nuevoProducto)
             addProduct(data.nuevoProducto)
         } catch (error) {
@@ -46,7 +39,7 @@ export const ProductsAdd = ({ addProduct }) => {
                     layout='vertical'
                     name="product"
                     onFinish={addNewProduct}
-                    initialValues={{ stock: true, price: 0 }}
+                    initialValues={{ stock: 100, price: 0 }}
                     id="productsForm"
                 >
                     <Row gutter={16}>
@@ -94,8 +87,8 @@ export const ProductsAdd = ({ addProduct }) => {
 
                         <Col lg={12}>
                         {/* STOCK */}
-                            <Form.Item label="Stock" name={"stock"} valuePropName="checked">
-                                <Switch />
+                            <Form.Item label="Stock (unidades)" name={"stock"}>
+                                <InputNumber min={0} precision={0} />
                             </Form.Item>
                         </Col>
 

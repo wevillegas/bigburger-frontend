@@ -12,7 +12,7 @@ export function buildTicketText(order) {
     lines.push('Tel: 3815480041 / 3814029984');
     lines.push(LINE);
     lines.push(`Pedido #${order.key.slice(-6).toUpperCase()}`);
-    lines.push(formatDateTime(order.date || order.cretatedAt));
+    lines.push(formatDateTime(order.date || order.createdAt));
 
     if (order.channel === 'caja') {
         lines.push(`Para: ${order.customerLabel}`);

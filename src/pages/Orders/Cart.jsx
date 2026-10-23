@@ -1,16 +1,19 @@
+import { API_URL } from '../../config/env'
+import { readJSON } from '../../utils/storage'
 import { DeleteOutlined, MinusOutlined, PlusOutlined, ShoppingOutlined } from "@ant-design/icons";
 import { Modal, Typography } from "antd";
 import axios from "axios";
 import React, { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "../../auth/useAuth";
+import { CANCEL_WINDOW_MINUTES } from "../../utils/cancelOrder";
 import "./Cart.scss";
 
-const URL = process.env.REACT_APP_API_URL;
 
 export const Cart = ({ bCount }) => {
   const auth = useAuth();
-  const initialCart = JSON.parse(localStorage.getItem("inCart")) || [];
+  const navigate = useNavigate();
+  const initialCart = readJSON('inCart') || [];
 
   const [order, setOrder] = useState(initialCart);
   const [submitting, setSubmitting] = useState(false);
@@ -34,7 +37,7 @@ export const Cart = ({ bCount }) => {
     const syncWithCatalog = async () => {
       if (initialCart.length === 0) return;
       try {
-        const { data } = await axios.get(`${URL}/products`);
+        const { data } = await axios.get(`${API_URL}/products`);
         const catalog = data.products;
         const removed = [];
         const updated = [];
@@ -119,19 +122,23 @@ export const Cart = ({ bCount }) => {
         ticket.redeemPoints = true;
       }
 
-      const { data } = await axios.post(`${URL}/order`, ticket, {
-        headers: auth.token ? { authorization: auth.token } : {},
-      });
+      const { data } = await axios.post(`${API_URL}/order`, ticket);
 
       setOrder([]);
       if (auth.user && data.newOrder.pointsRedeemed > 0) {
         auth.updateUser({ points: Math.max(0, availablePoints - data.newOrder.pointsRedeemed) });
       }
       setRedeemPoints(false);
+      const token = data.newOrder.trackingToken;
+      if (token) {
+        // guardamos solo los últimos 5 seguimientos de este navegador
+        localStorage.setItem("guestOrders", JSON.stringify([token, ...(readJSON("guestOrders") || [])].slice(0, 5)));
+      }
       Modal.success({
         title: "Orden enviada",
-        content: `Recibimos tu pedido correctamente, su total a abonar es $${data.newOrder.total}`,
-        okText: "Ok",
+        content: `Recibimos tu pedido correctamente, su total a abonar es $${data.newOrder.total}. Si te equivocaste, podés cancelarlo durante los próximos ${CANCEL_WINDOW_MINUTES} minutos.`,
+        okText: token ? "Ver estado de mi pedido" : "Ok",
+        onOk: () => token && navigate("/seguimiento"),
       });
     } catch (error) {
       Modal.error({

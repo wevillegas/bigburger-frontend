@@ -1,4 +1,4 @@
-@import '../../Context/Themes.scss';
+@import '../../styles/themes.scss';
 
 .navbar{
     height: 4rem;
@@ -35,6 +35,12 @@
         align-items: center;
         gap: 0.6rem;
         text-decoration: none;
+
+        .brandLogo {
+            flex-shrink: 0;
+            border-radius: 6px;
+            display: block;
+        }
 
         .brandWord {
             font-family: var(--font-display);

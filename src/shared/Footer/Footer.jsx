@@ -1,6 +1,6 @@
 import React from 'react'
 import "./Footer.scss"
-import { DeleteOutlined, EditOutlined, FacebookOutlined, GithubOutlined, InstagramOutlined, WhatsAppOutlined } from '@ant-design/icons'
+import { FacebookOutlined, GithubOutlined, InstagramOutlined, WhatsAppOutlined } from '@ant-design/icons'
 
 export const Footer = () => {
   return (
@@ -13,7 +13,7 @@ export const Footer = () => {
         </div>
         <div className="box">
           <h2>Dirección</h2>
-          <a href="https://www.google.com.ar/maps/place/Leno+Yerba+Buena/@-26.8143197,-65.2913045,17z/data=!3m1!4b1!4m5!3m4!1s0x942243ed8f9f071f:0x2af833d946423723!8m2!3d-26.8143245!4d-65.2891158" target="_blank">
+          <a href="https://www.google.com.ar/maps/place/Leno+Yerba+Buena/@-26.8143197,-65.2913045,17z/data=!3m1!4b1!4m5!3m4!1s0x942243ed8f9f071f:0x2af833d946423723!8m2!3d-26.8143245!4d-65.2891158" target="_blank" rel="noreferrer">
             <p>
             Av. Aconquija 1336, T4107 Yerba Buena, Tucumán
             </p>
@@ -21,12 +21,12 @@ export const Footer = () => {
         </div>
         <div className="box">
           <h2>Contacto</h2>
-          <a href='https://api.whatsapp.com/send?phone=0123456789' target="_blank">
+          <a href='https://api.whatsapp.com/send?phone=0123456789' target="_blank" rel="noreferrer">
             <p>
               <WhatsAppOutlined /> 3815480041
             </p>
           </a>
-          <a href='https://api.whatsapp.com/send?phone=0123456789' target="_blank">
+          <a href='https://api.whatsapp.com/send?phone=0123456789' target="_blank" rel="noreferrer">
             <p>
               <WhatsAppOutlined /> 3814029984
             </p>
@@ -35,9 +35,9 @@ export const Footer = () => {
         <div className="box">
           <h2>Redes</h2>
           <div className="red-social">
-            <a href="https://www.facebook.com/" target="_blank"><FacebookOutlined /></a>
-            <a href="https://www.instagram.com/?hl=es-la" target="_blank"><InstagramOutlined /></a>
-            <a href="https://github.com/" target="_blank"><GithubOutlined /></a>
+            <a href="https://www.facebook.com/" target="_blank" rel="noreferrer"><FacebookOutlined /></a>
+            <a href="https://www.instagram.com/?hl=es-la" target="_blank" rel="noreferrer"><InstagramOutlined /></a>
+            <a href="https://github.com/" target="_blank" rel="noreferrer"><GithubOutlined /></a>
           </div>
         </div>
       </div>

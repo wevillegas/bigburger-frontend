@@ -18,7 +18,7 @@ export const ProductList = ({ productsDBToList, deleteProduct, editModal, pageSi
                         <img src={product.IMG} alt={product.name} />
                         <span className="admin-product-tag">{product.categorie_id}</span>
                         <span className={`admin-product-stock${product.stock ? '' : ' is-out'}`}>
-                            {product.stock ? 'En stock' : 'Sin stock'}
+                            {product.stock ? `${product.stock} en stock` : 'Sin stock'}
                         </span>
                     </div>
                     <div className="admin-product-info">

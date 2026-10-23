@@ -1,10 +1,9 @@
+import { API_URL } from '../../config/env'
 import { Typography } from 'antd';
 import axios from 'axios';
 import React, { useEffect, useMemo, useState } from 'react';
-import { useAuth } from '../../auth/useAuth';
 import './Dashboard.scss';
 
-const URL = process.env.REACT_APP_API_URL;
 
 function startOfDay(daysAgo = 0) {
   const d = new Date();
@@ -14,14 +13,13 @@ function startOfDay(daysAgo = 0) {
 }
 
 export const Dashboard = () => {
-  const auth = useAuth();
   const [orders, setOrders] = useState([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const loadOrders = async () => {
       try {
-        const { data } = await axios.get(`${URL}/orders`, { headers: { authorization: auth.token } });
+        const { data } = await axios.get(`${API_URL}/orders`);
         setOrders(data.ticket);
       } catch {
         // si falla, el dashboard queda en cero en vez de romper la página
@@ -41,14 +39,14 @@ export const Dashboard = () => {
     const isThisWeek = (d) => new Date(d) >= weekAgo;
 
     const revenueToday = orders
-      .filter((o) => o.state === 'realizado' && isToday(o.cretatedAt))
+      .filter((o) => o.state === 'realizado' && isToday(o.createdAt))
       .reduce((sum, o) => sum + o.total, 0);
 
     const revenueWeek = orders
-      .filter((o) => o.state === 'realizado' && isThisWeek(o.cretatedAt))
+      .filter((o) => o.state === 'realizado' && isThisWeek(o.createdAt))
       .reduce((sum, o) => sum + o.total, 0);
 
-    const ordersToday = orders.filter((o) => isToday(o.cretatedAt)).length;
+    const ordersToday = orders.filter((o) => isToday(o.createdAt)).length;
     const pendingCount = orders.filter((o) => o.state === 'pendiente').length;
 
     const channelCounts = { caja: 0, online: 0 };
