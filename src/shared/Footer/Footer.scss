@@ -84,8 +84,8 @@
             padding: 0;
             font: inherit;
             color: inherit;
-            text-decoration: underline;
             cursor: pointer;
+            transition: all 200ms ease;
 
             &:hover {
                 color: var(--color3);
