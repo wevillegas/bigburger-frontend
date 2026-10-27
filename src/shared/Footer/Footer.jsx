@@ -1,8 +1,10 @@
-import React from 'react'
+import React, { useState } from 'react'
 import "./Footer.scss"
+import { AboutModal } from './AboutModal'
 import { FacebookOutlined, GithubOutlined, InstagramOutlined, WhatsAppOutlined } from '@ant-design/icons'
 
 export const Footer = () => {
+  const [aboutOpen, setAboutOpen] = useState(false)
   return (
     <footer className='footer'>
       <div className="grupo-1">
@@ -13,36 +15,25 @@ export const Footer = () => {
         </div>
         <div className="box">
           <h2>Dirección</h2>
-          <a href="https://www.google.com.ar/maps/place/Leno+Yerba+Buena/@-26.8143197,-65.2913045,17z/data=!3m1!4b1!4m5!3m4!1s0x942243ed8f9f071f:0x2af833d946423723!8m2!3d-26.8143245!4d-65.2891158" target="_blank" rel="noreferrer">
-            <p>
-            Av. Aconquija 1336, T4107 Yerba Buena, Tucumán
-            </p>
-          </a>
+          <p>Av. Los Naranjos 1234, San Miguel de Tucumán</p>
         </div>
         <div className="box">
           <h2>Contacto</h2>
-          <a href='https://api.whatsapp.com/send?phone=0123456789' target="_blank" rel="noreferrer">
-            <p>
-              <WhatsAppOutlined /> 3815480041
-            </p>
-          </a>
-          <a href='https://api.whatsapp.com/send?phone=0123456789' target="_blank" rel="noreferrer">
-            <p>
-              <WhatsAppOutlined /> 3814029984
-            </p>
-          </a>
+          <p><WhatsAppOutlined /> 381 555-0142</p>
+          <p><WhatsAppOutlined /> 381 555-0187</p>
         </div>
         <div className="box">
           <h2>Redes</h2>
           <div className="red-social">
             <a href="https://www.facebook.com/" target="_blank" rel="noreferrer"><FacebookOutlined /></a>
             <a href="https://www.instagram.com/?hl=es-la" target="_blank" rel="noreferrer"><InstagramOutlined /></a>
-            <a href="https://github.com/" target="_blank" rel="noreferrer"><GithubOutlined /></a>
+            <a href="https://github.com/wevillegas" target="_blank" rel="noreferrer"><GithubOutlined /></a>
           </div>
         </div>
       </div>
       <div className="grupo-2">
-        <small>&copy; <b>Big Burger</b> - Todos los Derechos Reservados.</small>
+        <small>&copy; <b>Big Burger</b> - Todos los Derechos Reservados. · <button type="button" className="aboutLink" onClick={() => setAboutOpen(true)}>Acerca de</button></small>
+        <AboutModal open={aboutOpen} onClose={() => setAboutOpen(false)} />
       </div>
     </footer>
   )
