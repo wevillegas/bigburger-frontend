@@ -1,8 +1,7 @@
 import { Modal } from "antd";
 import { GithubOutlined, LinkedinOutlined } from "@ant-design/icons";
 
-// ponytail: reemplazar por la URL real del perfil de LinkedIn
-const LINKEDIN_URL = "https://www.linkedin.com/";
+const LINKEDIN_URL = "https://www.linkedin.com/in/wenceslaojosevillegas/";
 
 const STACK = [
   ["Frontend", "React 18, Vite, Ant Design, React Router, Axios, Sass"],
