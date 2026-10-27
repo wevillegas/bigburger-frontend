@@ -32,8 +32,8 @@ export const MyOrders = ({ bCount }) => {
     try {
       const dataFromDB = await axios.get(`${API_URL}/orders`)
       const ordersDB = dataFromDB.data.ticket;
-      // los pedidos cargados por un admin desde caja no son "sus" pedidos personales
-      const orderFilter = ordersDB.filter(el => el.user._id === auth.user._id && el.channel !== 'caja')
+      // los de caja solo cuentan si el admin los vinculó a esta cuenta (el backend ya filtra, esto es por seguridad extra)
+      const orderFilter = ordersDB.filter(el => el.user._id === auth.user._id || el.linkedCustomer?._id === auth.user._id)
       const orderToRender = orderFilter.map(el => ({
         date: el.createdAt,
         key: el._id,
@@ -45,7 +45,8 @@ export const MyOrders = ({ bCount }) => {
         deliveryAddress: el.deliveryAddress,
         discount: el.discount,
         pointsRedeemed: el.pointsRedeemed,
-        pointsEarned: el.pointsEarned
+        pointsEarned: el.pointsEarned,
+        channel: el.channel
       }))
       updOrders(orderToRender)
     } catch {
@@ -140,7 +141,7 @@ export const MyOrders = ({ bCount }) => {
                 onClick={() => toggleExpanded(order.key)}
               >
                 <div className="order-card-date">
-                  <span className="order-card-label">Pedido</span>
+                  <span className="order-card-label">{order.channel === 'caja' ? 'Pedido en caja' : 'Pedido'}</span>
                   <span>{formatDateTime(order.date)}</span>
                 </div>
 
@@ -156,6 +157,9 @@ export const MyOrders = ({ bCount }) => {
 
               <div className={`order-card-body-wrap${isOpen ? ' is-open' : ''}`}>
                 <div className="order-card-body-inner">
+                  {order.channel === 'caja' && (
+                    <p className="order-delivery-info"><strong>Pedido hecho en caja</strong> (en el local)</p>
+                  )}
                   {order.deliveryMethod === 'envio' && (
                     <p className="order-delivery-info">Envío a: {order.deliveryAddress}</p>
                   )}
@@ -181,7 +185,7 @@ export const MyOrders = ({ bCount }) => {
                   <button type="button" className="order-reorder-btn" onClick={() => reorder(order)}>
                     <RedoOutlined /> Pedir de nuevo
                   </button>
-                  {canCancel(order.state, order.date) && (
+                  {order.channel !== 'caja' && canCancel(order.state, order.date) && (
                     <button type="button" className="order-cancel-btn" onClick={() => confirmCancel(`${API_URL}/order/${order.key}/cancel`, getOrders)}>
                       <CloseOutlined /> Cancelar pedido (hasta {CANCEL_WINDOW_MINUTES} min)
                     </button>
