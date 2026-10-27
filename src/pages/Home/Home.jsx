@@ -14,6 +14,7 @@ import { AuthRoute } from "../../routes/AuthRoute";
 import { Footer } from "../../shared/Footer/Footer";
 import { Header } from "../../shared/Header/Header";
 import { Sidebar } from "../../shared/Sidebar/Sidebar";
+import { WelcomeModal } from "../../shared/WelcomeModal/WelcomeModal";
 import { DriftingBackground } from "../../shared/Background/DriftingBackground";
 import { Cart } from "../Orders/Cart";
 import { OrderList } from "../Orders/OrderList/OrderList";
@@ -75,6 +76,7 @@ export const Home = () => {
   return (
     <>
       <DriftingBackground />
+      <WelcomeModal />
       <Layout style={{ minHeight: "100vh" }}>
         <Header productsQty={productsQty} onMenuClick={() => setMenuOpen((o) => !o)} />
         <Layout className="fullHeight">

@@ -1,0 +1,24 @@
+@import '../../styles/themes.scss';
+
+.welcomeModal {
+  .ant-modal-content {
+    border-radius: var(--radius);
+    box-shadow: var(--shadow-hard);
+    border: 2px solid var(--color1);
+    background: var(--color5);
+  }
+  h2 {
+    font-family: var(--font-display);
+    text-transform: uppercase;
+    color: var(--color2);
+    margin: 8px 0 16px;
+  }
+  ul {
+    padding-left: 18px;
+    margin-bottom: 20px;
+    color: var(--grey1);
+  }
+  li {
+    margin-bottom: 8px;
+  }
+}
