@@ -32,7 +32,7 @@ export const Footer = () => {
         </div>
       </div>
       <div className="grupo-2">
-        <small>&copy; <b>Big Burger</b> - Todos los Derechos Reservados. · <button type="button" className="aboutLink" onClick={() => setAboutOpen(true)}>Acerca de</button></small>
+        <small>&copy; <b>Big Burger</b> - Todos los Derechos Reservados. · <span role="button" tabIndex={0} className="aboutLink" onClick={() => setAboutOpen(true)} onKeyDown={(e) => e.key === "Enter" && setAboutOpen(true)}>Acerca de</span></small>
         <AboutModal open={aboutOpen} onClose={() => setAboutOpen(false)} />
       </div>
     </footer>
